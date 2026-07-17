@@ -665,7 +665,7 @@
     </nav>
   </div>
 
-  <aside class="editor-dock" aria-label="网站内容编辑器">
+  <aside class="editor-dock" aria-label="网站内容编辑器" hidden>
     <div class="editor-row">
       <div class="editor-status" id="site-editor-status"><strong>制作模式</strong>输入密码后，可编辑并写入项目文件。</div>
       <div class="editor-actions">
@@ -1134,6 +1134,7 @@
     loadVisitorComments();
 
     // TEMPORARY SITE EDITOR：网站定稿后可删除这一段和 .editor-dock。
+    const editorDock = document.querySelector('.editor-dock');
     const editorStatus = document.querySelector('#site-editor-status');
     const editorPassword = document.querySelector('#editor-password');
     const startSiteEdit = document.querySelector('#start-site-edit');
@@ -1150,6 +1151,18 @@
     let activeEditFields = [];
     let activeEditScope = 'site';
     let editorToken = '';
+
+    async function revealEditorWhenAvailable() {
+      try {
+        const response = await fetch('/_editor/status', { cache: 'no-store' });
+        const result = response.ok ? await response.json() : null;
+        editorDock.hidden = !result?.available;
+      } catch (error) {
+        editorDock.hidden = true;
+      }
+    }
+
+    revealEditorWhenAvailable();
 
     function clearEditorAccess() {
       editorToken = '';

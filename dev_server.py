@@ -2,7 +2,8 @@
 
 Run: python dev_server.py
 Then open: http://127.0.0.1:4173/index.html
-Change editor password: python set_editor_password.py
+Local password: python set_editor_password.py
+Cloud password: set YEZI_EDITOR_PASSWORD in the deployment environment
 """
 
 from __future__ import annotations
@@ -33,8 +34,8 @@ ARCHIVE_IMAGES_DIR = ASSETS_DIR / "archive"
 MUSIC_DIR = ASSETS_DIR / "music"
 MUSIC_LIBRARY_FILE = MUSIC_DIR / "library.json"
 EDITOR_AUTH_FILE = ROOT / ".editor-auth.json"
-HOST = "127.0.0.1"
-PORT = 4173
+HOST = os.environ.get("HOST", "127.0.0.1")
+PORT = int(os.environ.get("PORT", "4173"))
 MAX_BODY_SIZE = 2 * 1024 * 1024
 MAX_IMAGE_SIZE = 8 * 1024 * 1024
 EDITOR_SESSION_SECONDS = 8 * 60 * 60
@@ -57,7 +58,14 @@ ARCHIVE_CATEGORIES = {"daily", "product", "aigc", "games"}
 ARCHIVE_IMAGE_PATTERN = re.compile(r"assets/archive/[A-Za-z0-9._-]+\.(?:jpg|png|webp)")
 
 
+def editor_auth_configured() -> bool:
+    return bool(os.environ.get("YEZI_EDITOR_PASSWORD")) or EDITOR_AUTH_FILE.exists()
+
+
 def verify_editor_password(password: str) -> bool:
+    environment_password = os.environ.get("YEZI_EDITOR_PASSWORD")
+    if environment_password:
+        return hmac.compare_digest(password.encode("utf-8"), environment_password.encode("utf-8"))
     try:
         config = json.loads(EDITOR_AUTH_FILE.read_text(encoding="utf-8"))
         if config.get("algorithm") != "pbkdf2_sha256":
@@ -226,6 +234,9 @@ class EditorHandler(SimpleHTTPRequestHandler):
         )
 
     def do_GET(self) -> None:  # noqa: N802 - required by BaseHTTPRequestHandler
+        if urlparse(self.path).path == "/_editor/status":
+            self._send_json({"available": editor_auth_configured()})
+            return
         if self._is_private_request():
             self.send_error(404, "Not found")
             return
@@ -491,6 +502,7 @@ class EditorHandler(SimpleHTTPRequestHandler):
         response = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
         self.send_header("Content-Length", str(len(response)))
         self.end_headers()
         self.wfile.write(response)
@@ -502,8 +514,11 @@ class SingleInstanceHTTPServer(ThreadingHTTPServer):
 
 
 if __name__ == "__main__":
-    if not EDITOR_AUTH_FILE.exists():
-        raise SystemExit("Editor password is not configured. Run: python set_editor_password.py")
+    if not editor_auth_configured():
+        raise SystemExit(
+            "Editor password is not configured. Run python set_editor_password.py "
+            "or set YEZI_EDITOR_PASSWORD."
+        )
     music_count = generate_music_library()
     server = SingleInstanceHTTPServer((HOST, PORT), EditorHandler)
     if sys.stdout is not None:
