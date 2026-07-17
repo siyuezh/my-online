@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="一份带有编辑感、游戏感与个人温度的个人作品集网站。">
+  <title>椰子 · Personal Portfolio</title>
+  <style>
+    :root {
+      --ink: #111111;
+      --paper: #f4f4f1;
+      --white: #ffffff;
+      --pink: #ef5ca8;
+      --pink-soft: #ffc6e2;
+      --blue: #4c89f7;
+      --blue-soft: #cfe2ff;
+      --yellow: #ffda3e;
+      --green: #55d98b;
+      --purple: #b78df7;
+      --muted: #686868;
+      --line: 2px solid var(--ink);
+      --shadow: 5px 5px 0 var(--ink);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 110px; overflow-x: hidden; }
+    body {
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 25%, rgba(239,92,168,.06), transparent 26%),
+        radial-gradient(circle at 83% 68%, rgba(76,137,247,.07), transparent 25%),
+        var(--paper);
+      font-family: Inter, "Arial Black", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .23;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+      z-index: 999;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    ::selection { color: var(--ink); background: var(--yellow); }
+
+    .page-shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .section { padding: 112px 0 24px; position: relative; }
+
+    .nav-wrap {
+      position: fixed;
+      top: 26px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(700px, calc(100% - 32px));
+      z-index: 100;
+    }
+
+    .nav {
+      min-height: 58px;
+      padding: 7px 10px 7px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border: var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.94);
+      box-shadow: 4px 4px 0 var(--ink);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand { font-weight: 950; letter-spacing: -.04em; white-space: nowrap; }
+    .brand-dot { color: var(--pink); }
+    .nav-links { display: flex; align-items: center; justify-content: center; gap: 4px; flex: 1; }
+    .nav-link {
+      padding: 8px 14px;
+      border: 1.5px solid transparent;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      transition: .18s ease;
+    }
+    .nav-link:hover, .nav-link.active { border-color: var(--ink); background: var(--yellow); }
+    .nav-mail {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      border: var(--line);
+      border-radius: 50%;
+      background: var(--pink-soft);
+      transition: transform .18s ease;
+    }
+    .nav-mail:hover { transform: rotate(-8deg) scale(1.06); }
+    .nav-mail svg { width: 18px; }
+    .menu-button { display: none; border: 0; background: none; width: 38px; height: 38px; font-size: 22px; cursor: pointer; }
+
+    .hero {
+      min-height: 100vh;
+      padding: 150px 0 90px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+      gap: clamp(44px, 8vw, 110px);
+    }
+
+    .eyebrow {
+      width: fit-content;
+      margin-bottom: 18px;
+      padding: 4px 10px;
+      border: 1.5px solid var(--ink);
+      background: var(--ink);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+    }
+
+    .hero h1 {
+      max-width: 700px;
+      font-size: clamp(46px, 6.4vw, 86px);
+      line-height: .98;
+      letter-spacing: -.065em;
+      font-weight: 950;
+    }
+    .hero-content { position: relative; }
+    .hero-content::before {
+      content: "";
+      position: absolute;
+      inset: -45px;
+      z-index: -1;
+      opacity: 0;
+      pointer-events: none;
+      background: radial-gradient(circle 180px at var(--pointer-x, 45%) var(--pointer-y, 45%), rgba(76,137,247,.18), transparent 72%);
+      transition: opacity .25s ease;
+    }
+    .hero-content:hover::before { opacity: 1; }
+
+    .marker {
+      display: inline-block;
+      padding: 0 .08em .05em;
+      border: 3px solid var(--ink);
+      line-height: .92;
+      box-shadow: 4px 4px 0 var(--ink);
+      transform: rotate(-1deg);
+    }
+    .marker.pink { background: var(--pink); }
+    .marker.blue { color: var(--white); background: var(--blue); }
+    .marker.yellow { background: var(--yellow); }
+
+    .hero-copy { max-width: 620px; margin: 28px 0 30px; color: #3e3e3e; font-size: 15px; font-weight: 650; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+    .chip { padding: 6px 10px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--white); font-size: 12px; font-weight: 850; transition: transform .16s ease, background .16s ease; }
+    .chip:hover { transform: translateY(-3px) rotate(-1deg); background: var(--yellow); }
+
+    .button-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 18px;
+      border: var(--line);
+      border-radius: 10px;
+      background: var(--white);
+      box-shadow: 4px 4px 0 var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+    .btn.primary { color: var(--white); background: var(--ink); }
+    .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+
+    .music-player {
+      position: fixed;
+      top: 26px;
+      right: 18px;
+      z-index: 120;
+      width: min(316px, calc(100vw - 32px));
+      min-height: 390px;
+      padding: 15px 17px 17px;
+      border: 2px solid var(--ink);
+      border-radius: 20px;
+      background: rgba(255,255,255,.97);
+      box-shadow: 6px 6px 0 var(--ink);
+      backdrop-filter: blur(12px);
+      transition: width .2s ease, height .2s ease, min-height .2s ease, padding .2s ease, border-radius .2s ease, box-shadow .2s ease;
+    }
+    .music-heading { display: flex; align-items: center; min-height: 26px; margin-bottom: 11px; cursor: grab; touch-action: none; user-select: none; }
+    .music-player.is-dragging { transition: none; }
+    .music-player.is-dragging .music-heading { cursor: grabbing; }
+    .music-player.is-dock-ready { box-shadow: 6px 6px 0 var(--pink); }
+    .music-heading::before { content: ""; width: 4px; height: 17px; margin-right: 8px; border: 1px solid var(--ink); background: var(--pink); transform: rotate(-2deg); }
+    .music-heading strong { font-size: 15px; font-weight: 950; letter-spacing: -.02em; }
+    .music-entry-button { width: 28px; height: 25px; margin-left: auto; padding: 0; display: grid; place-items: center; border: 1.5px solid var(--ink); border-radius: 6px; background: var(--pink-soft); box-shadow: 2px 2px 0 var(--ink); cursor: pointer; }
+    .music-entry-button:hover, .music-entry-button.active { transform: translate(1px, 1px); background: var(--yellow); box-shadow: 1px 1px 0 var(--ink); }
+    .music-icon { width: 16px; height: 16px; display: block; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+    .music-track { display: grid; grid-template-columns: 54px minmax(0, 1fr); align-items: center; gap: 11px; }
+    .music-cover { position: relative; width: 54px; height: 54px; display: grid; place-items: center; overflow: hidden; border: 2px solid var(--ink); border-radius: 50%; background: var(--pink-soft); box-shadow: 3px 3px 0 var(--ink); font-size: 21px; }
+    .music-cover img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .music-cover-fallback { line-height: 1; }
+    .music-cover-fallback .music-icon { width: 23px; height: 23px; }
+    .music-info { min-width: 0; }
+    .music-title { display: block; overflow: hidden; font-size: 14px; font-weight: 950; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+    .music-artist { display: block; overflow: hidden; margin-top: 3px; color: var(--muted); font-size: 10px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    .music-status { display: block; overflow: hidden; margin-top: 2px; color: var(--blue); font-size: 9px; font-weight: 900; text-overflow: ellipsis; white-space: nowrap; }
+    .music-timeline { margin-top: 12px; }
+    .music-progress { position: relative; height: 7px; overflow: hidden; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--blue-soft); cursor: pointer; }
+    .music-progress span { display: block; width: 0%; height: 100%; background: var(--pink); transition: width .15s linear; }
+    .music-time { display: flex; justify-content: space-between; margin-top: 4px; color: var(--muted); font-size: 9px; font-weight: 850; font-variant-numeric: tabular-nums; }
+    .music-controls { display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; gap: 8px; margin: 8px 0 12px; }
+    .music-button { width: 100%; height: 34px; padding: 0; display: grid; place-items: center; border: 1.5px solid transparent; border-radius: 8px; background: transparent; cursor: pointer; transition: .15s ease; }
+    .music-button:hover, .music-button.active { border-color: var(--ink); background: var(--yellow); box-shadow: 2px 2px 0 var(--ink); }
+    .music-button.play { width: 50px; height: 50px; justify-self: center; border: 2px solid var(--ink); border-radius: 50%; color: var(--white); background: var(--pink); box-shadow: 3px 3px 0 var(--ink); font-size: 18px; }
+    .music-button.play:hover { transform: translate(1px, 1px); background: var(--pink); box-shadow: 2px 2px 0 var(--ink); }
+    .music-lyrics { max-height: 137px; min-height: 137px; padding: 11px 8px 8px; overflow: hidden; border-top: 1.5px dashed var(--ink); text-align: center; opacity: 1; transition: max-height .28s ease, min-height .28s ease, padding .28s ease, opacity .2s ease, border-color .2s ease; }
+    .music-player.lyrics-collapsed { min-height: 0; }
+    .music-player.lyrics-collapsed .music-lyrics { max-height: 0; min-height: 0; padding-top: 0; padding-bottom: 0; border-top-color: transparent; opacity: 0; pointer-events: none; }
+    .lyric-line { display: block; min-height: 19px; overflow: hidden; color: #929292; font-size: 10px; font-weight: 750; line-height: 1.55; text-overflow: ellipsis; white-space: nowrap; transition: color .2s ease, transform .2s ease, opacity .2s ease; }
+    .lyric-far { opacity: .58; }
+    .lyric-current { min-height: 42px; margin: 3px 0; display: grid; place-items: center; color: var(--pink); font-size: 13px; font-weight: 950; line-height: 1.45; white-space: pre-line; transform: scale(1.02); }
+    .music-popover { position: absolute; top: 76px; right: 14px; z-index: 3; width: calc(100% - 28px); padding: 12px; border: 2px solid var(--ink); border-radius: 12px; background: var(--white); box-shadow: 4px 4px 0 var(--ink); }
+    .music-popover-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 12px; font-weight: 950; }
+    .music-volume-row { width: 168px; margin: -3px 2px 9px auto; display: grid; grid-template-columns: 20px 1fr 28px; align-items: center; gap: 4px; }
+    .music-volume-symbol { display: grid; place-items: center; color: var(--muted); }
+    .music-volume-symbol .music-icon { width: 14px; height: 14px; }
+    .music-volume-range { width: 100%; height: 4px; accent-color: var(--pink); cursor: pointer; }
+    .music-mute-button { width: 28px; height: 26px; padding: 0; display: grid; place-items: center; border: 1.5px solid transparent; border-radius: 7px; background: transparent; cursor: pointer; }
+    .music-mute-button:hover, .music-mute-button.active { border-color: var(--ink); background: var(--yellow); }
+    .music-mute-button .icon-muted, .music-entry-button .icon-eye-off, .music-button .icon-pause, .music-mini-play .icon-pause { display: none; }
+    .music-player.is-muted .music-mute-button .icon-volume, .music-player.lyrics-collapsed .music-entry-button .icon-eye, .music-player.is-playing .music-button.play .icon-play, .music-player.is-playing .music-mini-play .icon-play { display: none; }
+    .music-player.is-muted .music-mute-button .icon-muted, .music-player.lyrics-collapsed .music-entry-button .icon-eye-off, .music-player.is-playing .music-button.play .icon-pause, .music-player.is-playing .music-mini-play .icon-pause { display: block; }
+    .music-playlist { display: grid; gap: 6px; max-height: 185px; overflow-y: auto; }
+    .music-playlist-item { width: 100%; padding: 8px 9px; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 7px; border: 1.5px solid var(--ink); border-radius: 7px; background: var(--white); text-align: left; cursor: pointer; }
+    .music-playlist-item.active { background: var(--pink-soft); box-shadow: 2px 2px 0 var(--ink); }
+    .music-playlist-item strong, .music-playlist-item small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .music-playlist-item strong { font-size: 10px; }
+    .music-playlist-item small { margin-top: 1px; color: var(--muted); font-size: 8px; }
+    .music-empty { color: var(--muted); font-size: 10px; font-weight: 800; text-align: center; }
+    .music-mini-play, .music-mini-restore { display: none; }
+    .music-player.music-mini { width: 72px !important; min-height: 72px; height: 72px; padding: 7px; overflow: visible; border-radius: 20px; }
+    .music-player.music-mini > :not(.music-track):not(.music-mini-play):not(.music-mini-restore):not(audio) { display: none !important; }
+    .music-player.music-mini .music-track { display: block; }
+    .music-player.music-mini .music-info { display: none; }
+    .music-player.music-mini .music-cover { width: 54px; height: 54px; box-shadow: none; }
+    .music-player.music-mini .music-mini-play { position: absolute; inset: 17px; z-index: 2; display: grid; place-items: center; border: 0; border-radius: 50%; color: var(--white); background: rgba(17,17,17,.72); cursor: pointer; }
+    .music-player.music-mini .music-mini-restore { position: absolute; top: 22px; left: -21px; z-index: 3; width: 25px; height: 28px; display: grid; place-items: center; border: 1.5px solid var(--ink); border-radius: 8px 0 0 8px; background: var(--yellow); box-shadow: 2px 2px 0 var(--ink); font-size: 16px; font-weight: 950; cursor: pointer; }
+    @media (max-width: 1400px) {
+      .music-player { top: 94px; right: 18px; }
+    }
+
+    .portrait-stage { position: relative; max-width: 430px; margin-inline: auto; }
+    .portrait-card {
+      position: relative;
+      aspect-ratio: 1 / 1.03;
+      overflow: hidden;
+      border: var(--line);
+      border-radius: 32px;
+      background: #f6f0df;
+      box-shadow: 7px 7px 0 var(--ink);
+      transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+      transform-style: preserve-3d;
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .portrait-card svg { width: 100%; height: 100%; display: block; }
+    .profile-image { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .image-replace-btn {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      z-index: 4;
+      padding: 7px 10px;
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      background: var(--yellow);
+      box-shadow: 2px 2px 0 var(--ink);
+      font-size: 10px;
+      font-weight: 950;
+      cursor: pointer;
+    }
+    .image-replace-btn:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+
+    .sticker {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border: var(--line);
+      border-radius: 50%;
+      color: var(--ink);
+      background: var(--pink);
+      box-shadow: 3px 3px 0 var(--ink);
+      font-weight: 950;
+      z-index: 2;
+    }
+    .sticker.top { top: -20px; right: -28px; width: 84px; height: 84px; font-size: 11px; transform: rotate(12deg); }
+    .sticker.star { left: -34px; bottom: 18px; width: 70px; height: 70px; background: var(--yellow); font-size: 26px; transform: rotate(-10deg); }
+
+    .scribble { position: absolute; color: var(--pink); font-weight: 950; font-size: 28px; }
+    .scribble.one { right: -16px; bottom: 80px; transform: rotate(15deg); }
+    .scribble.two { left: 4%; top: 15%; color: var(--blue); transform: rotate(-18deg); }
+
+    .section-kicker { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 12px; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
+    .section-kicker::before { content: ""; width: 34px; height: 4px; background: var(--pink); border: 1px solid var(--ink); }
+    .section-title { max-width: 790px; margin-bottom: 54px; font-size: clamp(38px, 5vw, 68px); line-height: 1.02; letter-spacing: -.055em; font-weight: 950; }
+    .section-lead { max-width: 720px; margin: -28px 0 48px; color: var(--muted); font-size: 16px; font-weight: 650; }
+
+    [hidden] { display: none !important; }
+    .editor-dock {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 600;
+      width: min(390px, calc(100% - 28px));
+      padding: 13px;
+      border: var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 5px 5px 0 var(--ink);
+      backdrop-filter: blur(12px);
+    }
+    .editor-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .editor-status { color: var(--muted); font-size: 11px; font-weight: 800; line-height: 1.35; }
+    .editor-status strong { display: block; color: var(--ink); font-size: 13px; }
+    .editor-actions { display: flex; flex-shrink: 0; gap: 7px; }
+    .editor-btn {
+      padding: 8px 11px;
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 2px 2px 0 var(--ink);
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .editor-btn.start { background: var(--yellow); }
+    .editor-btn.save { background: var(--green); }
+    .editor-btn.cancel { background: var(--pink-soft); }
+    .editor-btn:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+    body.site-editing [data-site-editable] {
+      outline: 2px dashed var(--blue);
+      outline-offset: 4px;
+      border-radius: 3px;
+      cursor: text;
+      background-color: rgba(207,226,255,.3);
+    }
+    body.site-editing [data-site-editable]:focus {
+      outline-style: solid;
+      background-color: rgba(255,218,62,.3);
+    }
+    body.site-editing .editor-dock { box-shadow: 5px 5px 0 var(--blue); }
+    body.earth-editing #earth-online [data-site-editable] {
+      outline: 2px dashed var(--green);
+      outline-offset: 4px;
+      border-radius: 3px;
+      cursor: text;
+      background-color: rgba(85,217,139,.2);
+    }
+    body.earth-editing #earth-online [data-site-editable]:focus { outline-style: solid; background-color: rgba(255,218,62,.3); }
+    .editor-password {
+      width: 118px;
+      padding: 8px 9px;
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      background: var(--white);
+      font-size: 11px;
+      font-weight: 800;
+      outline: none;
+    }
+    .editor-password:focus { background: #fff8cf; }
+
+    .about-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(40px, 8vw, 96px); }
+    .about-copy p { margin-bottom: 18px; font-size: 16px; font-weight: 650; }
+    .about-copy strong { background: linear-gradient(transparent 55%, var(--pink-soft) 55%); }
+    .about-copy [data-edit-key="about-summary"],
+    .about-copy [data-edit-key="about-summary"] * {
+      color: inherit !important;
+      font: inherit !important;
+      background: transparent !important;
+    }
+
+    .id-card {
+      position: relative;
+      padding: 20px;
+      border: var(--line);
+      border-radius: 14px;
+      background: var(--white);
+      box-shadow: 7px 7px 0 var(--ink);
+      transform: perspective(900px) rotate(-2deg) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+      transform-style: preserve-3d;
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .id-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; font-size: 12px; font-weight: 950; }
+    .id-head span:first-child { padding: 5px 8px; border: 1.5px solid var(--ink); background: var(--green); }
+    .id-layout { display: grid; grid-template-columns: 110px 1fr; gap: 14px; }
+    .id-photo { overflow: hidden; border: 1.5px solid var(--ink); border-radius: 10px; background: var(--pink-soft); }
+    .id-photo svg { width: 100%; height: 100%; display: block; }
+    .id-photo { position: relative; }
+    .id-photo .image-replace-btn { right: 6px; bottom: 6px; padding: 5px 7px; }
+    .id-info { display: grid; gap: 7px; }
+    .id-field { padding: 7px 9px; border: 1.5px solid var(--ink); border-radius: 7px; font-size: 11px; font-weight: 800; }
+    .id-field:nth-child(1) { background: #ffe571; }
+    .id-field:nth-child(2) { background: var(--blue-soft); }
+    .id-field:nth-child(3) { background: #e5d4ff; }
+    .barcode { height: 34px; margin-top: 14px; border: 1.5px solid var(--ink); border-radius: 6px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 5px, var(--ink) 5px 6px, transparent 6px 9px); }
+
+    .quote-banner {
+      max-width: 750px;
+      margin: 104px auto 84px;
+      padding: 18px 30px;
+      border: var(--line);
+      background: var(--yellow);
+      box-shadow: var(--shadow);
+      text-align: center;
+      font-size: clamp(18px, 2.6vw, 30px);
+      font-weight: 950;
+      transform: rotate(.5deg);
+    }
+
+    .updates-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+    .label-title { display: inline-block; padding: 8px 16px; border: var(--line); background: var(--pink); box-shadow: 4px 4px 0 var(--ink); font-size: 18px; font-weight: 950; transform: rotate(-1deg); }
+    .updates-note { font-size: 12px; color: var(--muted); font-weight: 800; }
+    .updates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .update-card {
+      min-height: 145px;
+      padding: 22px;
+      position: relative;
+      border: var(--line);
+      border-radius: 16px;
+      background: var(--white);
+      box-shadow: 5px 5px 0 var(--blue);
+      transition: .2s ease;
+    }
+    .update-card:nth-child(2) { box-shadow: 5px 5px 0 var(--pink); transform: translateY(10px) rotate(1deg); }
+    .update-card:nth-child(3) { box-shadow: 5px 5px 0 var(--green); }
+    .update-card:hover { transform: translateY(-6px) rotate(-1deg); }
+    .update-card:nth-child(2):hover { transform: translateY(3px) rotate(0); }
+    .update-icon { width: 34px; height: 34px; margin-bottom: 17px; display: grid; place-items: center; border: 1.5px solid var(--ink); border-radius: 8px; font-size: 17px; }
+    .update-card h3 { margin-bottom: 7px; font-size: 16px; }
+    .update-card p { color: var(--muted); font-size: 13px; font-weight: 650; }
+    .update-date { position: absolute; top: 18px; right: 18px; font-size: 10px; font-weight: 900; }
+
+    .earth { padding-top: 140px; }
+    .earth-title { text-align: center; margin-bottom: 38px; font-size: clamp(38px, 5vw, 62px); font-weight: 950; letter-spacing: -.05em; }
+    .earth-heading-row { display: flex; align-items: center; justify-content: center; gap: 22px; margin-bottom: 38px; }
+    .earth-heading-row .earth-title { margin-bottom: 0; }
+    .earth-edit-btn {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      border: var(--line);
+      border-radius: 9px;
+      background: var(--green);
+      box-shadow: 3px 3px 0 var(--ink);
+      font-size: 11px;
+      font-weight: 950;
+      cursor: pointer;
+    }
+    .earth-edit-btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+    .earth-node-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: -20px 0 28px; }
+    .earth-node-btn {
+      padding: 8px 11px;
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: 2px 2px 0 var(--ink);
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .earth-node-btn.main { background: var(--blue-soft); }
+    .earth-node-btn.side { background: #c9f1d5; }
+    .mission-row.is-empty { display: none; }
+    .timeline-board {
+      position: relative;
+      max-width: 980px;
+      height: auto;
+      min-height: 0;
+      margin: 0 auto;
+      padding: 74px 55px 44px;
+      overflow: hidden;
+      border: var(--line);
+      border-radius: 30px;
+      background-color: rgba(255,255,255,.72);
+      background-image: linear-gradient(#dcdcdc 1px, transparent 1px), linear-gradient(90deg, #dcdcdc 1px, transparent 1px);
+      background-size: 24px 24px;
+      box-shadow: 8px 8px 0 var(--ink);
+    }
+    .timeline-board::before { content: ""; position: absolute; top: 64px; bottom: 40px; left: 50%; border-left: 3px dashed var(--ink); transform: translateX(-50%); }
+    .lane-label { position: absolute; top: 22px; padding: 6px 13px; border: 1.5px solid var(--ink); background: var(--white); box-shadow: 3px 3px 0 var(--pink); font-size: 14px; font-weight: 950; }
+    .lane-label.main { left: 9%; }
+    .lane-label.side { right: 9%; box-shadow-color: var(--green); }
+    .timeline-list { display: grid; gap: 28px; position: relative; }
+    .mission-row { display: grid; grid-template-columns: 1fr 42px 1fr; align-items: center; min-height: 86px; }
+    .mission-dot { width: 16px; height: 16px; margin: auto; border: 4px solid var(--white); border-radius: 50%; background: var(--ink); outline: 2px solid var(--ink); z-index: 1; }
+    .mission-card { position: relative; padding: 14px 16px; border: 1.5px solid var(--ink); border-radius: 12px; background: var(--white); box-shadow: 4px 4px 0 var(--blue); }
+    .mission-card.side { grid-column: 3; box-shadow-color: var(--pink); }
+    .mission-card.main { grid-column: 1; }
+    .mission-row[data-lane="main"] .mission-card { grid-column: 1; box-shadow-color: var(--blue); }
+    .mission-row[data-lane="side"] .mission-card { grid-column: 3; box-shadow-color: var(--pink); }
+    .mission-row .mission-dot { grid-column: 2; grid-row: 1; }
+    .mission-row.is-deleted { display: none; }
+    .mission-controls { display: none; position: absolute; top: 7px; right: 7px; gap: 4px; z-index: 3; }
+    body.earth-editing .mission-controls { display: flex; }
+    body.earth-editing .mission-card { padding-top: 45px; }
+    .mission-control {
+      width: 27px;
+      height: 27px;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid var(--ink);
+      border-radius: 6px;
+      background: var(--white);
+      font-size: 12px;
+      font-weight: 950;
+      cursor: pointer;
+    }
+    .mission-control.switch { background: var(--yellow); }
+    .mission-control.delete { background: var(--pink-soft); }
+    .mission-card .year { font-size: 10px; font-weight: 950; }
+    .mission-card h4 { font-size: 14px; margin: 3px 0; }
+    .mission-card p { font-size: 11px; color: var(--muted); font-weight: 650; }
+
+    .visitor-comments { padding: 88px 0 20px; overflow: hidden; }
+    .comments-title { margin-bottom: 24px; font-size: clamp(30px, 4vw, 48px); font-weight: 950; letter-spacing: -.045em; }
+    .comments-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .comment-manage-btn { padding: 8px 11px; border: var(--line); border-radius: 8px; background: var(--white); box-shadow: 3px 3px 0 var(--ink); font-size: 11px; font-weight: 900; cursor: pointer; }
+    .comment-manage-btn.active, .comment-manage-btn:hover { background: var(--pink-soft); }
+    .comment-form { margin: 0 0 22px; padding: 14px; display: grid; grid-template-columns: 150px 1fr 125px auto; gap: 8px; border: 1.5px solid var(--ink); border-radius: 13px; background: rgba(255,255,255,.78); }
+    .comment-input { min-width: 0; padding: 9px 10px; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--white); font-size: 12px; font-weight: 700; outline: none; }
+    .comment-input:focus { background: #fff8cf; }
+    .comment-submit { padding: 0 13px; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--green); box-shadow: 2px 2px 0 var(--ink); font-size: 11px; font-weight: 950; cursor: pointer; }
+    .comment-submit:hover { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+    .comment-form-status { grid-column: 1 / -1; min-height: 15px; color: var(--muted); font-size: 11px; font-weight: 750; }
+    .comment-stage {
+      min-height: 350px;
+      padding: 34px 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      border: var(--line);
+      border-radius: 24px;
+      background: #fff8cf;
+      box-shadow: 7px 7px 0 var(--ink);
+    }
+    .comment-lane { overflow: hidden; padding: 12px 0; }
+    .comment-track { display: flex; width: max-content; animation: comment-scroll 46s linear infinite; }
+    .comment-lane:nth-child(2) .comment-track { animation-duration: 54s; animation-direction: reverse; }
+    .comment-lane:nth-child(3) .comment-track { animation-duration: 49s; }
+    .comment-group { display: flex; flex: 0 0 auto; gap: 34px; padding-right: 34px; }
+    .comment-chip {
+      position: relative;
+      min-width: max-content;
+      max-width: 520px;
+      padding: 13px 18px;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      background: var(--white);
+      box-shadow: 3px 3px 0 var(--blue);
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .comment-lane:nth-child(2) .comment-chip { box-shadow-color: var(--pink); }
+    .comment-lane:nth-child(3) .comment-chip { box-shadow-color: var(--green); }
+    .comment-meta { margin-left: 9px; color: var(--muted); font-size: 10px; font-weight: 900; }
+    .comment-delete { display: none; margin-left: 10px; padding: 2px 6px; border: 1px solid var(--ink); border-radius: 5px; background: var(--pink-soft); font-size: 10px; font-weight: 950; cursor: pointer; }
+    body.comments-admin .comment-delete { display: inline-block; }
+    .comment-stage:hover .comment-track { animation-play-state: paused; }
+    body.site-editing .comment-track { animation-play-state: paused; }
+    @keyframes comment-scroll { to { transform: translateX(-50%); } }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .hero-content.reveal, .hero-content.reveal.visible { transform: none; }
+
+    @media (max-width: 900px) {
+      .hero, .about-grid { grid-template-columns: 1fr; }
+      .hero { padding-top: 145px; }
+      .hero-copy { max-width: 720px; }
+      .portrait-stage { width: min(430px, 86vw); }
+      .updates-grid { grid-template-columns: 1fr; }
+      .update-card:nth-child(2) { transform: none; }
+    }
+
+    @media (max-width: 680px) {
+      .page-shell { width: min(100% - 28px, 1180px); }
+      .section { padding-top: 88px; }
+      .nav { padding-left: 16px; }
+      .menu-button { display: block; margin-left: auto; }
+      .nav-mail { display: none; }
+      .nav-links {
+        position: absolute;
+        top: 66px;
+        left: 0;
+        right: 0;
+        padding: 10px;
+        display: none;
+        flex-direction: column;
+        border: var(--line);
+        border-radius: 18px;
+        background: var(--white);
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+      .nav-links.open { display: flex; }
+      .nav-link { width: 100%; text-align: center; }
+      .hero { min-height: auto; padding-bottom: 48px; }
+      .hero h1 { font-size: clamp(43px, 15vw, 65px); }
+      .sticker.top { right: -5px; }
+      .sticker.star { left: -6px; }
+      .id-layout { grid-template-columns: 92px 1fr; }
+      .quote-banner { margin-top: 80px; }
+      .updates-head { align-items: flex-start; flex-direction: column; }
+      .music-player { top: 94px; right: 14px; width: min(316px, calc(100vw - 28px)); max-height: calc(100vh - 112px); overflow-y: auto; }
+      .comments-head { align-items: flex-start; flex-direction: column; }
+      .comment-form { grid-template-columns: 1fr; }
+      .comment-submit { min-height: 38px; }
+      .editor-dock { right: 14px; bottom: 14px; }
+      .editor-row { align-items: flex-start; flex-direction: column; }
+      .editor-actions { width: 100%; }
+      .editor-password { flex: 1; width: auto; min-width: 0; }
+      .earth-heading-row { align-items: flex-start; flex-direction: column; }
+      .earth-heading-row .earth-title { text-align: left; }
+      .timeline-board { padding: 70px 14px 30px; }
+      .timeline-board::before { left: 20px; }
+      .lane-label.side { right: 18px; }
+      .mission-row { display: grid; grid-template-columns: 32px 1fr; min-height: auto; }
+      .mission-dot { grid-column: 1; grid-row: 1; }
+      .mission-card.main, .mission-card.side { grid-column: 2; grid-row: 1; margin: 8px 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="nav-wrap">
+    <nav class="nav" aria-label="主导航">
+      <a class="brand" href="#home">YEZI<span class="brand-dot">.</span></a>
+      <button class="menu-button" type="button" aria-label="展开导航" aria-expanded="false">☰</button>
+      <div class="nav-links">
+        <a class="nav-link active" href="#home">首页</a>
+        <a class="nav-link" href="#about">关于我</a>
+        <a class="nav-link" href="archive.html">归档</a>
+        <a class="nav-link" href="works.html">作品集</a>
+        <a class="nav-link" href="projects.html">项目</a>
+      </div>
+      <a class="nav-mail" href="mailto:hello@example.com" aria-label="给我发邮件">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </a>
+    </nav>
+  </div>
+
+  <aside class="editor-dock" aria-label="网站内容编辑器">
+    <div class="editor-row">
+      <div class="editor-status" id="site-editor-status"><strong>制作模式</strong>输入密码后，可编辑并写入项目文件。</div>
+      <div class="editor-actions">
+        <input class="editor-password" id="editor-password" name="site-editor-passphrase" type="password" value="" placeholder="输入编辑密码" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="编辑密码">
+        <button class="editor-btn start" id="start-site-edit" type="button">解锁全站</button>
+        <button class="editor-btn save" id="save-site-edit" type="button" hidden>✓ 保存</button>
+        <button class="editor-btn cancel" id="cancel-site-edit" type="button" hidden>取消</button>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <section class="page-shell hero" id="home">
+      <div class="hero-content reveal">
+        <div class="eyebrow">HELLO, WORLD! / 你好世界</div>
+        <h1>我是<br><span class="marker pink">椰子不是银渐层</span>，<br>AWorkhorse，<br>练习时长 <span class="marker blue">两年半</span></h1>
+        <p class="hero-copy">Street Man｜Digital Writer｜Hyperactive Workhors PM by day，Vibe Coder by night。一个认真生活、偶尔掉线、持续更新中的地球 Online 玩家。</p>
+        <div class="hero-meta">
+          <span class="chip">📍 Shenzhen</span>
+          <span class="chip">⚡ Open to collaborate</span>
+          <span class="chip">LV. 23</span>
+        </div>
+        <div class="button-row">
+          <a class="btn primary" href="#about">更多关于我 <span>↘</span></a>
+          <a class="btn" href="works.html">查看作品 <span>→</span></a>
+        </div>
+        <div class="music-player" aria-label="背景音乐播放器">
+          <div class="music-heading" title="按住拖动播放器">
+            <strong>音乐</strong>
+            <button class="music-entry-button" id="music-lyrics-toggle" type="button" aria-label="隐藏歌词" aria-pressed="true" title="显示或隐藏歌词">
+              <svg class="music-icon icon-eye" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.7"/></svg>
+              <svg class="music-icon icon-eye-off" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18M10.6 6.2A10.8 10.8 0 0 1 12 6c6 0 9.5 6 9.5 6a16 16 0 0 1-2.1 2.8M6.2 6.4C3.8 8 2.5 12 2.5 12s3.5 6 9.5 6a9.7 9.7 0 0 0 3.2-.5M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+            </button>
+          </div>
+          <button class="music-mini-restore" id="music-mini-restore" type="button" aria-label="展开播放器"><svg class="music-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button>
+          <button class="music-mini-play" id="music-mini-play" type="button" aria-label="播放背景音乐"><svg class="music-icon icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z" fill="currentColor" stroke="none"/></svg><svg class="music-icon icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10"/></svg></button>
+          <div class="music-track">
+            <div class="music-cover" id="music-cover"><img id="music-cover-image" alt="当前歌曲封面" loading="lazy" hidden><span class="music-cover-fallback" id="music-cover-fallback"><svg class="music-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l10-2v13M9 9l10-2"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg></span></div>
+            <div class="music-info">
+              <span class="music-title" id="music-title">暂无音乐</span>
+              <span class="music-artist" id="music-artist">YEZI RADIO</span>
+              <span class="music-status" id="music-status" aria-live="polite">正在读取本地曲库</span>
+            </div>
+          </div>
+          <div class="music-timeline">
+            <div class="music-progress" id="music-progress" role="slider" aria-label="音乐播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><span id="music-progress-bar"></span></div>
+            <div class="music-time"><span id="music-current-time">0:00</span><span id="music-duration">0:00</span></div>
+          </div>
+          <div class="music-controls">
+            <button class="music-button" id="music-loop" type="button" aria-label="切换循环播放" aria-pressed="false" title="循环播放"><svg class="music-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 2l3 3-3 3M4 11V8a3 3 0 0 1 3-3h13M7 22l-3-3 3-3M20 13v3a3 3 0 0 1-3 3H4"/></svg></button>
+            <button class="music-button" id="music-prev" type="button" aria-label="上一首" title="上一首"><svg class="music-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M18 7l-8 5 8 5Z" fill="currentColor"/></svg></button>
+            <button class="music-button play" id="music-play" type="button" aria-label="播放背景音乐" title="播放或暂停"><svg class="music-icon icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z" fill="currentColor" stroke="none"/></svg><svg class="music-icon icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10"/></svg></button>
+            <button class="music-button" id="music-next" type="button" aria-label="下一首" title="下一首"><svg class="music-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6v12M6 7l8 5-8 5Z" fill="currentColor"/></svg></button>
+            <button class="music-button" id="music-playlist-toggle" type="button" aria-label="打开播放列表" aria-expanded="false" title="播放列表"><svg class="music-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/></svg></button>
+          </div>
+          <div class="music-volume-row">
+            <span class="music-volume-symbol" aria-hidden="true"><svg class="music-icon" viewBox="0 0 24 24"><path d="M5 10v4h4l5 4V6l-5 4Z"/><path d="M17 9a4 4 0 0 1 0 6"/></svg></span>
+            <input class="music-volume-range" id="music-volume-range" type="range" min="0" max="100" value="80" aria-label="音量">
+            <button class="music-mute-button" id="music-volume" type="button" aria-label="静音" aria-pressed="false" title="静音或恢复声音"><svg class="music-icon icon-volume" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 10v4h4l5 4V6l-5 4Z"/><path d="M17 9a4 4 0 0 1 0 6"/></svg><svg class="music-icon icon-muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 10v4h4l5 4V6l-5 4ZM17 10l4 4M21 10l-4 4"/></svg></button>
+          </div>
+          <div class="music-lyrics" id="music-lyrics" aria-live="polite">
+            <span class="lyric-line lyric-far"></span>
+            <span class="lyric-line"></span>
+            <strong class="lyric-line lyric-current">歌词还在整理中。</strong>
+            <span class="lyric-line"></span>
+            <span class="lyric-line lyric-far"></span>
+          </div>
+          <div class="music-popover" id="music-playlist-panel" hidden>
+            <div class="music-popover-title"><span>播放列表</span><span id="music-playlist-count">0 首</span></div>
+            <div class="music-playlist" id="music-playlist"></div>
+          </div>
+          <audio id="background-music" preload="metadata"></audio>
+        </div>
+      </div>
+
+      <div class="portrait-stage reveal" aria-label="个人插画头像">
+        <span class="scribble two">✦</span>
+        <div class="portrait-card">
+          <img class="profile-image" id="hero-profile-image" alt="个人主页照片" hidden>
+          <svg viewBox="0 0 420 430" role="img" aria-label="戴眼镜的短发人物插画">
+            <rect width="420" height="430" fill="#f6f0df"/>
+            <path d="M104 430c6-94 42-154 106-154s103 60 110 154" fill="#4c89f7" stroke="#111" stroke-width="3"/>
+            <path d="M104 430c2-74 24-124 68-145l38 53 38-53c45 22 68 73 72 145" fill="#ef5ca8" stroke="#111" stroke-width="3"/>
+            <path d="M210 338v92M172 285l38 53 38-53" fill="none" stroke="#111" stroke-width="3"/>
+            <rect x="201" y="357" width="18" height="18" rx="4" fill="#111"/>
+            <path d="M123 186c0-84 38-130 92-130 65 0 96 58 92 137-3 65-34 103-94 103-57 0-90-42-90-110Z" fill="#050505" stroke="#111" stroke-width="3"/>
+            <ellipse cx="143" cy="206" rx="21" ry="28" fill="#ffb99c" stroke="#111" stroke-width="3"/>
+            <ellipse cx="285" cy="206" rx="21" ry="28" fill="#ffb99c" stroke="#111" stroke-width="3"/>
+            <path d="M153 136c9-38 111-44 126 4v82c0 57-28 90-65 90s-65-32-65-90Z" fill="#ffb99c" stroke="#111" stroke-width="3"/>
+            <path d="M145 156c26-4 51-23 64-56 5 25 26 45 72 56-1-66-32-95-70-95-41 0-68 35-66 95Z" fill="#050505"/>
+            <circle cx="183" cy="203" r="29" fill="#ffd8c7" stroke="#111" stroke-width="3"/>
+            <circle cx="248" cy="203" r="29" fill="#ffd8c7" stroke="#111" stroke-width="3"/>
+            <path d="M212 201h7M152 198l-12-5M277 198l13-5" stroke="#111" stroke-width="3"/>
+            <circle cx="184" cy="205" r="5" fill="#111"/>
+            <circle cx="247" cy="205" r="5" fill="#111"/>
+            <path d="M216 207l-6 25h12M190 252c15 13 34 13 49 0" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+            <path d="M131 178c-12 42-7 82 5 112-30-18-39-51-31-89 6-29 19-48 26-58Z" fill="#050505"/>
+            <path d="M295 172c14 43 8 85-3 116 28-18 38-50 31-88-5-29-18-49-28-59Z" fill="#050505"/>
+          </svg>
+          <button class="image-replace-btn" type="button" data-image-slot="hero">替换主页照片</button>
+          <input type="file" id="hero-image-input" accept="image/png,image/jpeg,image/webp" hidden>
+        </div>
+        <div class="sticker top">KEEP<br>CURIOUS</div>
+        <div class="sticker star">★</div>
+        <span class="scribble one">↯</span>
+      </div>
+    </section>
+
+    <section class="section page-shell" id="about">
+      <div class="section-kicker reveal">ABOUT ME / 关于我</div>
+      <div class="about-grid">
+        <div class="about-copy reveal">
+          <h2 class="section-title">Welcome to<br><span class="marker blue" data-editable data-edit-key="about-title">椰子的世界！</span></h2>
+          <p data-editable data-edit-key="about-origin">出生于 2002 年 12月，在广西的一个小城市长大。喜欢研究新事物、拆解问题、搭建系统，也喜欢记录那些稍纵即逝的平凡瞬间。</p>
+          <p data-editable data-edit-key="about-summary">我是一个喜欢把复杂变简单的人。产品、代码、街头摄影，对我来说都是一回事：从芜杂中抽出那根最干净的线条。最近，我开始拍摄一个新的对象——AIGC。它现在还很乱，像素模糊，充满噪点。<br>但我打算，像往常一样，把它调成一张清楚的照片。</p>
+          <p data-editable data-edit-key="about-aigc">别人研究 AIGC：搞钱、创业、颠覆行业。 我研究 AIGC：怎么让它帮我写 PRD、剪视频，好让 996 之后还能留口气当牛马。人生还在内测，版本号 v0.6.1-alpha，正在尝试集成 AIGC 模块。Bug 很多，但至少文档已经让 AI 写了。</p>
+        </div>
+
+        <div class="id-card reveal">
+          <div class="id-head"><span>ID CARD</span><span>EARTH ONLINE</span></div>
+          <div class="id-layout">
+            <div class="id-photo">
+              <img class="profile-image" id="id-profile-image" alt="个人证件照片" hidden>
+              <svg viewBox="0 0 100 132" aria-hidden="true">
+                <rect width="100" height="132" fill="#ffc6e2"/>
+                <path d="M16 132c2-32 15-49 34-49s32 17 34 49" fill="#4c89f7" stroke="#111" stroke-width="2"/>
+                <path d="M24 54C24 21 38 9 51 9c24 0 31 20 27 54-3 27-15 38-28 38-17 0-26-17-26-47Z" fill="#111"/>
+                <ellipse cx="50" cy="58" rx="23" ry="30" fill="#ffb99c" stroke="#111" stroke-width="2"/>
+                <path d="M29 48c16-4 25-15 29-27 2 13 9 21 20 28" fill="#111"/>
+                <circle cx="40" cy="58" r="10" fill="none" stroke="#111" stroke-width="2"/>
+                <circle cx="62" cy="58" r="10" fill="none" stroke="#111" stroke-width="2"/>
+                <path d="M50 58h2M43 75c5 5 10 5 15 0" fill="none" stroke="#111" stroke-width="2"/>
+              </svg>
+              <button class="image-replace-btn" type="button" data-image-slot="id">替换照片</button>
+              <input type="file" id="id-image-input" accept="image/png,image/jpeg,image/webp" hidden>
+            </div>
+            <div class="id-info">
+              <div class="id-field">NAME<br><b data-editable data-edit-key="id-name">椰子 / YEZI</b></div>
+              <div class="id-field">ROLE<br><b data-editable data-edit-key="id-role">电商运营 & 创作者</b></div>
+              <div class="id-field">SKILL<br><b data-editable data-edit-key="id-skill">运营 · AI · Vibe Coding</b></div>
+            </div>
+          </div>
+          <div class="barcode" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="quote-banner reveal" data-editable data-edit-key="about-quote">每一个别人看起来非主流的爱好，都是一条隐藏支线。</div>
+
+      <div class="updates-head reveal">
+        <h3 class="label-title">近日生活 / RECENT UPDATES</h3>
+        <span class="updates-note" data-editable data-edit-key="update-version">当前版本：快乐体验服 2.6.0</span>
+      </div>
+      <div class="updates-grid">
+        <article class="update-card reveal">
+          <span class="update-date">07 / 12</span><div class="update-icon">▣</div>
+          <h3 data-editable data-edit-key="update-1-title">重启生活</h3><p data-editable data-edit-key="update-1-copy">在房间里冥想，想清楚自己究竟想要过上什么样的人生。</p>
+        </article>
+        <article class="update-card reveal">
+          <span class="update-date">07 / 06</span><div class="update-icon">▤</div>
+          <h3 data-editable data-edit-key="update-2-title">最近在读</h3><p data-editable data-edit-key="update-2-copy">重读《设计中的设计》，重新理解克制和留白。</p>
+        </article>
+        <article class="update-card reveal">
+          <span class="update-date">06 / 28</span><div class="update-icon">⌘</div>
+          <h3 data-editable data-edit-key="update-3-title">游戏进度</h3><p data-editable data-edit-key="update-3-copy">AI 编程技能树 +12，正在挑战“独立做完一个产品”。</p>
+        </article>
+      </div>
+
+      <div class="earth" id="earth-online">
+        <div class="earth-heading-row reveal">
+          <h3 class="earth-title">地球 Online <span class="marker pink">开放游戏进度</span></h3>
+          <button class="earth-edit-btn" id="edit-earth-online" type="button">✎ 编辑地球 Online</button>
+        </div>
+        <div class="earth-node-actions" id="earth-node-actions" hidden>
+          <button class="earth-node-btn main" id="add-main-task" type="button">＋ 新增主线节点</button>
+          <button class="earth-node-btn side" id="add-side-task" type="button">＋ 新增支线节点</button>
+        </div>
+        <div class="timeline-board reveal">
+          <span class="lane-label main">主线任务</span><span class="lane-label side">支线任务</span>
+          <div class="timeline-list">
+            <div class="mission-row" data-mission-id="mission-1" data-lane="main"><article class="mission-card main"><span class="year" data-editable data-edit-key="mission-1-year">2002.12 · LV.00</span><h4 data-editable data-edit-key="mission-1-title">新玩家注册成功</h4><p data-editable data-edit-key="mission-1-copy">出生在北海，获得初始天赋：好奇心。</p></article><i class="mission-dot"></i></div>
+            <div class="mission-row" data-mission-id="mission-2" data-lane="side"><i class="mission-dot"></i><article class="mission-card side"><span class="year" data-editable data-edit-key="mission-2-year">2015.09 · SIDE QUEST</span><h4 data-editable data-edit-key="mission-2-title">第一次拿起相机</h4><p data-editable data-edit-key="mission-2-copy">开始记录生活，也开始理解观察。</p></article></div>
+            <div class="mission-row" data-mission-id="mission-3" data-lane="main"><article class="mission-card main"><span class="year" data-editable data-edit-key="mission-3-year">2018.09 · LV.15</span><h4 data-editable data-edit-key="mission-3-title">解锁大学地图</h4><p data-editable data-edit-key="mission-3-copy">学习新的知识，遇见一群有趣的舍友。</p></article><i class="mission-dot"></i></div>
+            <div class="mission-row" data-mission-id="mission-4" data-lane="side"><i class="mission-dot"></i><article class="mission-card side"><span class="year" data-editable data-edit-key="mission-4-year">2022.03 · SIDE QUEST</span><h4 data-editable data-edit-key="mission-4-title">发布第一条视频</h4><p data-editable data-edit-key="mission-4-copy">内容创作者身份正式加载。</p></article></div>
+            <div class="mission-row" data-mission-id="mission-5" data-lane="main"><article class="mission-card main"><span class="year" data-editable data-edit-key="mission-5-year">2025.06 · LV.22</span><h4 data-editable data-edit-key="mission-5-title">电商运营助理副本开启</h4><p data-editable data-edit-key="mission-5-copy">在需求、用户与商业之间寻找平衡。</p></article><i class="mission-dot"></i></div>
+            <div class="mission-row" data-mission-id="mission-6" data-lane="side"><i class="mission-dot"></i><article class="mission-card side"><span class="year" data-editable data-edit-key="mission-6-year">NOW · IN PROGRESS</span><h4 data-editable data-edit-key="mission-6-title">Vibe Coding 练习中</h4><p data-editable data-edit-key="mission-6-copy">尝试把脑海里的产品，一件件做出来。</p></article></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="visitor-comments page-shell" id="visitor-comments">
+      <div class="section-kicker reveal" data-edit-key="visitor-comments-kicker">VISITOR COMMENTS / 来访评论</div>
+      <div class="comments-head reveal">
+        <h3 class="comments-title" data-edit-key="visitor-comments-title">路过的人，留下了一些<span class="marker yellow">弹幕</span></h3>
+        <button class="comment-manage-btn" id="manage-comments" type="button">管理员删除</button>
+      </div>
+      <form class="comment-form reveal" id="visitor-comment-form">
+        <input class="comment-input" id="comment-author" maxlength="20" placeholder="你的名字" required>
+        <input class="comment-input" id="comment-content" maxlength="120" placeholder="写下一条来访评论..." required>
+        <input class="comment-input" id="comment-month" type="month" required>
+        <button class="comment-submit" type="submit">发送评论 →</button>
+        <div class="comment-form-status" id="comment-form-status" aria-live="polite"></div>
+      </form>
+      <div class="comment-stage reveal" aria-label="循环滚动的来访评论">
+        <div class="comment-lane"><div class="comment-track"><div class="comment-group">
+          <div class="comment-chip">页面很有生命力，看完也想重新整理自己的生活。<span class="comment-meta">— 阿青 · 2026.07</span></div>
+          <div class="comment-chip">地球 Online 这个设定太有意思了！<span class="comment-meta">— 林北 · 2026.06</span></div>
+          <div class="comment-chip">粗描边和亮色搭得很舒服，很有个人辨识度。<span class="comment-meta">— 小禾 · 2026.05</span></div>
+        </div></div></div>
+        <div class="comment-lane"><div class="comment-track"><div class="comment-group">
+          <div class="comment-chip">愿你一直保留这种旺盛的好奇心。<span class="comment-meta">— Momo · 2026.07</span></div>
+          <div class="comment-chip">产品经理晚上写代码，是真正的隐藏职业吧。<span class="comment-meta">— 无名玩家 · 2026.04</span></div>
+          <div class="comment-chip">看到这里，感觉像认识了一位有趣的新朋友。<span class="comment-meta">— 南风 · 2026.03</span></div>
+        </div></div></div>
+        <div class="comment-lane"><div class="comment-track"><div class="comment-group">
+          <div class="comment-chip">普通日子也值得认真记录，继续更新呀。<span class="comment-meta">— 十七 · 2026.06</span></div>
+          <div class="comment-chip">AIGC 研究搭子申请加入队伍。<span class="comment-meta">— K · 2026.05</span></div>
+          <div class="comment-chip">祝下一个人生版本少一点 Bug，多一点彩蛋。<span class="comment-meta">— 远山 · 2026.02</span></div>
+        </div></div></div>
+      </div>
+    </section>
+
+    <div id="timeline-extra-rows" hidden>
+      <!-- ponytail: eight prepared slots keep persistence simple; move to structured timeline JSON if more are needed. -->
+      <div class="mission-row is-empty" data-extra-mission="main" data-mission-id="mission-extra-main-1" data-lane="main"><article class="mission-card main"><span class="year" data-editable data-edit-key="mission-extra-main-1-year"></span><h4 data-editable data-edit-key="mission-extra-main-1-title"></h4><p data-editable data-edit-key="mission-extra-main-1-copy"></p></article><i class="mission-dot"></i></div>
+      <div class="mission-row is-empty" data-extra-mission="side" data-mission-id="mission-extra-side-1" data-lane="side"><i class="mission-dot"></i><article class="mission-card side"><span class="year" data-editable data-edit-key="mission-extra-side-1-year"></span><h4 data-editable data-edit-key="mission-extra-side-1-title"></h4><p data-editable data-edit-key="mission-extra-side-1-copy"></p></article></div>
+      <div class="mission-row is-empty" data-extra-mission="main" data-mission-id="mission-extra-main-2" data-lane="main"><article class="mission-card main"><span class="year" data-editable data-edit-key="mission-extra-main-2-year"></span><h4 data-editable data-edit-key="mission-extra-main-2-title"></h4><p data-editable data-edit-key="mission-extra-main-2-copy"></p></article><i class="mission-dot"></i></div>
+      <div class="mission-row is-empty" data-extra-mission="side" data-mission-id="mission-extra-side-2" data-lane="side"><i class="mission-dot"></i><article class="mission-card side"><span class="year" data-editable data-edit-key="mission-extra-side-2-year"></span><h4 data-editable data-edit-key="mission-extra-side-2-title"></h4><p data-editable data-edit-key="mission-extra-side-2-copy"></p></article></div>
+      <div class="mission-row is-empty" data-extra-mission="main" data-mission-id="mission-extra-main-3" data-lane="main"><article class="mission-card main"><span class="year" data-editable data-edit-key="mission-extra-main-3-year"></span><h4 data-editable data-edit-key="mission-extra-main-3-title"></h4><p data-editable data-edit-key="mission-extra-main-3-copy"></p></article><i class="mission-dot"></i></div>
+      <div class="mission-row is-empty" data-extra-mission="side" data-mission-id="mission-extra-side-3" data-lane="side"><i class="mission-dot"></i><article class="mission-card side"><span class="year" data-editable data-edit-key="mission-extra-side-3-year"></span><h4 data-editable data-edit-key="mission-extra-side-3-title"></h4><p data-editable data-edit-key="mission-extra-side-3-copy"></p></article></div>
+      <div class="mission-row is-empty" data-extra-mission="main" data-mission-id="mission-extra-main-4" data-lane="main"><article class="mission-card main"><span class="year" data-editable data-edit-key="mission-extra-main-4-year"></span><h4 data-editable data-edit-key="mission-extra-main-4-title"></h4><p data-editable data-edit-key="mission-extra-main-4-copy"></p></article><i class="mission-dot"></i></div>
+      <div class="mission-row is-empty" data-extra-mission="side" data-mission-id="mission-extra-side-4" data-lane="side"><i class="mission-dot"></i><article class="mission-card side"><span class="year" data-editable data-edit-key="mission-extra-side-4-year"></span><h4 data-editable data-edit-key="mission-extra-side-4-title"></h4><p data-editable data-edit-key="mission-extra-side-4-copy"></p></article></div>
+    </div>
+  </main>
+
+  <script>
+    const menuButton = document.querySelector('.menu-button');
+    const navLinksBox = document.querySelector('.nav-links');
+    const navLinks = [...document.querySelectorAll('.nav-link')];
+
+    menuButton.addEventListener('click', () => {
+      const open = navLinksBox.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.textContent = open ? '×' : '☰';
+    });
+
+    navLinks.forEach(link => link.addEventListener('click', () => {
+      navLinksBox.classList.remove('open');
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.textContent = '☰';
+    }));
+
+    const sectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+      });
+    }, { rootMargin: '-35% 0px -55% 0px' });
+    document.querySelectorAll('main > section[id]').forEach(section => sectionObserver.observe(section));
+
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // CONTENT LOADER：移除临时编辑器时保留这一段，已保存内容仍会正常显示。
+    const contentSelector = [
+      '.brand', '.nav-link', '.eyebrow', '.hero h1', '.hero-copy', '.chip',
+      '.btn', '.sticker', '.section-kicker', '.about-copy .section-title',
+      '.about-copy p', '.id-head span', '.id-field', '.quote-banner',
+      '.label-title', '.updates-note', '.update-date', '.update-card h3',
+      '.update-card p', '.earth-title', '.lane-label', '.mission-card .year',
+      '.mission-card h4', '.mission-card p', '.comments-title'
+    ].join(',');
+
+    const siteContentFields = [...document.querySelectorAll(contentSelector)];
+    let legacyContentIndex = 0;
+    siteContentFields.forEach(field => {
+      field.dataset.siteEditable = '';
+      if (field.matches('.nav-link[href="archive.html"]')) {
+        field.dataset.contentKey = 'archive-nav';
+        return;
+      }
+      legacyContentIndex += 1;
+      field.dataset.contentKey = field.dataset.editKey || `content-${String(legacyContentIndex).padStart(3, '0')}`;
+    });
+
+    const timelineList = document.querySelector('.timeline-list');
+    const extraTimelineRows = [...document.querySelectorAll('#timeline-extra-rows .mission-row')];
+    extraTimelineRows.forEach(row => timelineList.appendChild(row));
+    document.querySelector('#timeline-extra-rows').remove();
+    const allMissionRows = [...timelineList.querySelectorAll('.mission-row')];
+
+    const visitorCommentsSection = document.querySelector('#visitor-comments');
+    document.querySelector('#earth-online').insertAdjacentElement('afterend', visitorCommentsSection);
+
+    function setMissionLane(row, lane) {
+      row.dataset.lane = lane;
+      const card = row.querySelector('.mission-card');
+      card.classList.toggle('main', lane === 'main');
+      card.classList.toggle('side', lane === 'side');
+    }
+
+    function addMissionControls(row) {
+      const card = row.querySelector('.mission-card');
+      const controls = document.createElement('div');
+      controls.className = 'mission-controls';
+      controls.innerHTML = '<button class="mission-control" type="button" data-mission-action="up" aria-label="任务上移">↑</button><button class="mission-control" type="button" data-mission-action="down" aria-label="任务下移">↓</button><button class="mission-control switch" type="button" data-mission-action="switch" aria-label="切换主线支线">⇄</button><button class="mission-control delete" type="button" data-mission-action="delete" aria-label="删除任务">×</button>';
+      card.appendChild(controls);
+    }
+
+    allMissionRows.forEach(row => {
+      setMissionLane(row, row.dataset.lane || (row.querySelector('.mission-card').classList.contains('side') ? 'side' : 'main'));
+      addMissionControls(row);
+    });
+
+    function syncExtraMissionRows() {
+      extraTimelineRows.forEach(row => {
+        const title = row.querySelector('h4').textContent.trim();
+        row.classList.toggle('is-empty', !title);
+      });
+    }
+
+    const commentStage = document.querySelector('.comment-stage');
+    let currentVisitorComments = [];
+
+    function renderVisitorComments(comments) {
+      currentVisitorComments = comments;
+      commentStage.innerHTML = '';
+      const lanes = [[], [], []];
+      comments.forEach((comment, index) => lanes[index % 3].push(comment));
+      lanes.forEach(laneComments => {
+        const lane = document.createElement('div');
+        lane.className = 'comment-lane';
+        const track = document.createElement('div');
+        track.className = 'comment-track';
+        const group = document.createElement('div');
+        group.className = 'comment-group';
+        (laneComments.length ? laneComments : [{ id: '', content: '等待新的来访评论...', author: 'SYSTEM', month: 'NOW' }]).forEach(comment => {
+          const chip = document.createElement('div');
+          chip.className = 'comment-chip';
+          chip.dataset.commentId = comment.id;
+          const text = document.createElement('span');
+          text.textContent = comment.content;
+          const meta = document.createElement('span');
+          meta.className = 'comment-meta';
+          meta.textContent = `— ${comment.author} · ${comment.month}`;
+          const remove = document.createElement('button');
+          remove.className = 'comment-delete';
+          remove.type = 'button';
+          remove.textContent = '删除';
+          remove.setAttribute('aria-label', `删除 ${comment.author} 的评论`);
+          chip.append(text, meta, remove);
+          group.appendChild(chip);
+        });
+        track.appendChild(group);
+        lane.appendChild(track);
+        commentStage.appendChild(lane);
+      });
+      refreshCommentMarquee();
+    }
+
+    async function loadVisitorComments() {
+      try {
+        const response = await fetch('/comments.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error('load failed');
+        const comments = await response.json();
+        renderVisitorComments(Array.isArray(comments) ? comments : []);
+      } catch (error) {
+        console.info('来访评论暂时无法加载。');
+      }
+    }
+
+    function getTimelineLayout() {
+      return [...timelineList.querySelectorAll('.mission-row')]
+        .filter(row => !row.classList.contains('is-deleted') && !row.classList.contains('is-empty'))
+        .map(row => ({ id: row.dataset.missionId, lane: row.dataset.lane }));
+    }
+
+    function applyTimelineLayout(serializedLayout) {
+      if (!serializedLayout) {
+        allMissionRows.forEach(row => row.classList.remove('is-deleted'));
+        return;
+      }
+      try {
+        const layout = JSON.parse(serializedLayout);
+        if (!Array.isArray(layout)) return;
+        const rowById = new Map(allMissionRows.map(row => [row.dataset.missionId, row]));
+        allMissionRows.forEach(row => row.classList.add('is-deleted'));
+        layout.forEach(item => {
+          const row = rowById.get(item.id);
+          if (!row) return;
+          row.classList.remove('is-deleted');
+          setMissionLane(row, item.lane === 'side' ? 'side' : 'main');
+          timelineList.appendChild(row);
+        });
+      } catch (error) {
+        console.info('时间轴布局文件无效，使用默认顺序。');
+      }
+    }
+
+    function refreshCommentMarquee() {
+      document.querySelectorAll('.comment-track').forEach(track => {
+        track.querySelectorAll('.comment-group[aria-hidden="true"]').forEach(clone => clone.remove());
+        const original = track.querySelector('.comment-group');
+        const clone = original.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        clone.querySelectorAll('[data-site-editable]').forEach(field => {
+          field.removeAttribute('data-site-editable');
+          field.removeAttribute('data-content-key');
+          field.removeAttribute('contenteditable');
+        });
+        track.appendChild(clone);
+      });
+    }
+
+    async function loadSavedSiteContent() {
+      try {
+        const response = await fetch('/content.json', { cache: 'no-store' });
+        if (!response.ok) return {};
+        const saved = await response.json();
+        siteContentFields.forEach(field => {
+          const value = saved[field.dataset.contentKey];
+          if (typeof value === 'string') field.innerHTML = value;
+        });
+        return saved;
+      } catch (error) {
+        console.info('尚未找到已保存的网站内容。');
+        return {};
+      }
+    }
+
+    function applySavedImage(slot, url, refresh = false) {
+      if (!url) return;
+      const image = document.querySelector(`#${slot}-profile-image`);
+      const fallback = image.parentElement.querySelector('svg');
+      image.src = refresh ? `${url}${url.includes('?') ? '&' : '?'}time=${Date.now()}` : url;
+      image.hidden = false;
+      fallback.hidden = true;
+    }
+
+    async function loadSavedMedia() {
+      try {
+        const response = await fetch('/media.json', { cache: 'no-store' });
+        if (!response.ok) return;
+        const media = await response.json();
+        applySavedImage('hero', media.hero);
+        applySavedImage('id', media.id);
+      } catch (error) {
+        console.info('尚未上传替换照片。');
+      }
+    }
+
+    loadSavedSiteContent().then(saved => {
+      applyTimelineLayout(saved.__timeline_layout);
+    }).finally(() => {
+      syncExtraMissionRows();
+      refreshCommentMarquee();
+    });
+    loadSavedMedia();
+    loadVisitorComments();
+
+    // TEMPORARY SITE EDITOR：网站定稿后可删除这一段和 .editor-dock。
+    const editorStatus = document.querySelector('#site-editor-status');
+    const editorPassword = document.querySelector('#editor-password');
+    const startSiteEdit = document.querySelector('#start-site-edit');
+    const saveSiteEdit = document.querySelector('#save-site-edit');
+    const cancelSiteEdit = document.querySelector('#cancel-site-edit');
+    const editEarthOnline = document.querySelector('#edit-earth-online');
+    const earthNodeActions = document.querySelector('#earth-node-actions');
+    const addMainTask = document.querySelector('#add-main-task');
+    const addSideTask = document.querySelector('#add-side-task');
+    const imageReplaceButtons = [...document.querySelectorAll('[data-image-slot]')];
+    let siteEditSnapshot = new Map();
+    let timelineLayoutSnapshot = [];
+    let isSiteEditing = false;
+    let activeEditFields = [];
+    let activeEditScope = 'site';
+    let editorToken = '';
+
+    function clearEditorAccess() {
+      editorToken = '';
+      editorPassword.value = '';
+    }
+
+    window.addEventListener('pagehide', clearEditorAccess);
+    window.addEventListener('pageshow', event => {
+      clearEditorAccess();
+      requestAnimationFrame(clearEditorAccess);
+      setTimeout(clearEditorAccess, 150);
+      if (event.persisted && isSiteEditing) setSiteEditMode(false);
+    });
+
+    async function verifyEditorPassword() {
+      if (editorToken) return true;
+      const entered = editorPassword.value.trim();
+      if (!entered) {
+        editorPassword.focus();
+        editorStatus.innerHTML = '<strong>请输入密码</strong>密码只会发送给本地编辑服务验证。';
+        return false;
+      }
+      try {
+        const response = await fetch('/_editor/unlock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: entered })
+        });
+        if (!response.ok) throw new Error('unlock failed');
+        const result = await response.json();
+        editorToken = result.token || '';
+        if (!editorToken) throw new Error('missing token');
+        editorPassword.value = '';
+        return true;
+      } catch (error) {
+        editorToken = '';
+        editorPassword.value = '';
+        editorPassword.focus();
+        editorStatus.innerHTML = '<strong>密码错误或服务未启动</strong>请检查密码和本地编辑服务。';
+        return false;
+      }
+    }
+
+    function setSiteEditMode(editing, scope = activeEditScope) {
+      isSiteEditing = editing;
+      activeEditScope = scope;
+      document.body.classList.toggle('site-editing', editing && scope === 'site');
+      document.body.classList.toggle('earth-editing', editing && scope === 'earth');
+      startSiteEdit.hidden = editing;
+      saveSiteEdit.hidden = !editing;
+      cancelSiteEdit.hidden = !editing;
+      editorPassword.hidden = editing;
+      editEarthOnline.disabled = editing;
+      earthNodeActions.hidden = !(editing && scope === 'earth');
+      siteContentFields.forEach(field => {
+        field.removeAttribute('contenteditable');
+        field.removeAttribute('spellcheck');
+      });
+      activeEditFields.forEach(field => {
+        if (editing) {
+          field.setAttribute('contenteditable', 'true');
+          field.setAttribute('spellcheck', 'false');
+        }
+      });
+      editorStatus.innerHTML = editing
+        ? `<strong>正在编辑${scope === 'earth' ? '地球 Online' : '全站'}</strong>虚线框内的文字可以修改，内容会自动撑高。`
+        : '<strong>制作模式</strong>输入密码后，可编辑并写入项目文件。';
+    }
+
+    async function beginSiteEditing(scope) {
+      if (!await verifyEditorPassword()) return;
+      activeEditFields = scope === 'earth'
+        ? siteContentFields.filter(field => field.closest('#earth-online'))
+        : siteContentFields;
+      siteEditSnapshot = new Map(activeEditFields.map(field => [field.dataset.contentKey, field.innerHTML]));
+      timelineLayoutSnapshot = allMissionRows.map(row => ({
+        id: row.dataset.missionId,
+        lane: row.dataset.lane,
+        deleted: row.classList.contains('is-deleted'),
+        empty: row.classList.contains('is-empty')
+      }));
+      setSiteEditMode(true, scope);
+    }
+
+    startSiteEdit.addEventListener('click', () => { beginSiteEditing('site'); });
+    editEarthOnline.addEventListener('click', () => { beginSiteEditing('earth'); });
+    editorPassword.addEventListener('keydown', event => {
+      if (event.key === 'Enter') beginSiteEditing('site');
+    });
+
+    function addMissionNode(type) {
+      const row = extraTimelineRows.find(item => item.dataset.extraMission === type && item.classList.contains('is-empty'));
+      if (!row) {
+        editorStatus.innerHTML = '<strong>节点已满</strong>当前预留节点已用完，可继续扩展结构化时间轴。';
+        return;
+      }
+      const year = row.querySelector('.year');
+      const title = row.querySelector('h4');
+      const copy = row.querySelector('p');
+      year.textContent = 'NEW · IN PROGRESS';
+      title.textContent = type === 'main' ? '新主线任务' : '新支线任务';
+      copy.textContent = '点击这里填写任务内容。';
+      row.classList.remove('is-empty', 'is-deleted');
+      setMissionLane(row, type);
+      timelineList.appendChild(row);
+      [year, title, copy].forEach(field => {
+        field.setAttribute('contenteditable', 'true');
+        field.setAttribute('spellcheck', 'false');
+      });
+      title.focus();
+      editorStatus.innerHTML = `<strong>已新增${type === 'main' ? '主线' : '支线'}节点</strong>填写内容后点击保存。`;
+    }
+
+    addMainTask.addEventListener('click', () => addMissionNode('main'));
+    addSideTask.addEventListener('click', () => addMissionNode('side'));
+
+    timelineList.addEventListener('click', event => {
+      const control = event.target.closest('[data-mission-action]');
+      if (!control || !isSiteEditing || activeEditScope !== 'earth') return;
+      event.preventDefault();
+      const row = control.closest('.mission-row');
+      const action = control.dataset.missionAction;
+      const activeRows = [...timelineList.querySelectorAll('.mission-row')].filter(item => !item.classList.contains('is-deleted') && !item.classList.contains('is-empty'));
+      const currentIndex = activeRows.indexOf(row);
+      if (action === 'up' && currentIndex > 0) timelineList.insertBefore(row, activeRows[currentIndex - 1]);
+      if (action === 'down' && currentIndex >= 0 && currentIndex < activeRows.length - 1) timelineList.insertBefore(activeRows[currentIndex + 1], row);
+      if (action === 'switch') setMissionLane(row, row.dataset.lane === 'main' ? 'side' : 'main');
+      if (action === 'delete') {
+        row.classList.add('is-deleted');
+        if (row.dataset.extraMission) {
+          row.querySelector('.year').textContent = '';
+          row.querySelector('h4').textContent = '';
+          row.querySelector('p').textContent = '';
+          row.classList.add('is-empty');
+        }
+      }
+      editorStatus.innerHTML = '<strong>任务结构已更新</strong>保存后会记住顺序、主线/支线和删除状态。';
+    });
+
+    imageReplaceButtons.forEach(button => button.addEventListener('click', async () => {
+      if (!await verifyEditorPassword()) return;
+      document.querySelector(`#${button.dataset.imageSlot}-image-input`).click();
+    }));
+
+    async function uploadProfileImage(slot, file) {
+      if (!file) return;
+      if (file.size > 8 * 1024 * 1024) {
+        editorStatus.innerHTML = '<strong>图片过大</strong>请选择不超过 8MB 的图片。';
+        return;
+      }
+      editorStatus.innerHTML = '<strong>正在上传图片...</strong>完成后会直接写入项目。';
+      try {
+        const response = await fetch(`/_editor/upload?slot=${slot}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': file.type,
+            'X-Editor-Token': editorToken
+          },
+          body: file
+        });
+        if (!response.ok) {
+          if (response.status === 403) editorToken = '';
+          throw new Error('upload failed');
+        }
+        const result = await response.json();
+        applySavedImage(slot, result.url, true);
+        editorStatus.innerHTML = '<strong>图片已替换</strong>文件已保存到 assets 目录。';
+      } catch (error) {
+        editorStatus.innerHTML = '<strong>上传失败</strong>请检查密码、格式和本地编辑服务。';
+      }
+    }
+
+    document.querySelector('#hero-image-input').addEventListener('change', event => uploadProfileImage('hero', event.target.files[0]));
+    document.querySelector('#id-image-input').addEventListener('change', event => uploadProfileImage('id', event.target.files[0]));
+
+    const commentForm = document.querySelector('#visitor-comment-form');
+    const commentFormStatus = document.querySelector('#comment-form-status');
+    const manageComments = document.querySelector('#manage-comments');
+    let commentsAdminUnlocked = false;
+
+    commentForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      const payload = {
+        author: document.querySelector('#comment-author').value.trim(),
+        content: document.querySelector('#comment-content').value.trim(),
+        month: document.querySelector('#comment-month').value
+      };
+      commentFormStatus.textContent = '正在发送...';
+      try {
+        const response = await fetch('/_visitor/comment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error('comment failed');
+        commentForm.reset();
+        document.querySelector('#comment-month').value = new Date().toISOString().slice(0, 7);
+        commentFormStatus.textContent = '评论已加入弹幕。';
+        await loadVisitorComments();
+      } catch (error) {
+        commentFormStatus.textContent = '评论发送失败，请确认本地编辑服务正在运行。';
+      }
+    });
+    document.querySelector('#comment-month').value = new Date().toISOString().slice(0, 7);
+
+    manageComments.addEventListener('click', async () => {
+      if (commentsAdminUnlocked) {
+        commentsAdminUnlocked = false;
+        document.body.classList.remove('comments-admin');
+        manageComments.classList.remove('active');
+        manageComments.textContent = '管理员删除';
+        return;
+      }
+      if (!await verifyEditorPassword()) return;
+      commentsAdminUnlocked = true;
+      document.body.classList.add('comments-admin');
+      manageComments.classList.add('active');
+      manageComments.textContent = '退出管理员模式';
+    });
+
+    commentStage.addEventListener('click', async event => {
+      const remove = event.target.closest('.comment-delete');
+      if (!remove || !commentsAdminUnlocked) return;
+      const chip = remove.closest('.comment-chip');
+      const id = chip?.dataset.commentId;
+      if (!id) return;
+      remove.disabled = true;
+      const response = await fetch(`/_visitor/comment?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: { 'X-Editor-Token': editorToken }
+      });
+      if (response.status === 403) {
+        editorToken = '';
+        commentsAdminUnlocked = false;
+        document.body.classList.remove('comments-admin');
+      }
+      if (response.ok) await loadVisitorComments();
+      remove.disabled = false;
+    });
+
+    const musicPlayer = document.querySelector('.music-player');
+    const musicHeading = document.querySelector('.music-heading');
+    const musicAudio = document.querySelector('#background-music');
+    const musicTitle = document.querySelector('#music-title');
+    const musicStatus = document.querySelector('#music-status');
+    const musicArtist = document.querySelector('#music-artist');
+    const musicCoverImage = document.querySelector('#music-cover-image');
+    const musicCoverFallback = document.querySelector('#music-cover-fallback');
+    const musicLyrics = document.querySelector('#music-lyrics');
+    const musicLyricsToggle = document.querySelector('#music-lyrics-toggle');
+    const musicProgress = document.querySelector('#music-progress');
+    const musicProgressBar = document.querySelector('#music-progress-bar');
+    const musicCurrentTime = document.querySelector('#music-current-time');
+    const musicDuration = document.querySelector('#music-duration');
+    const musicPlay = document.querySelector('#music-play');
+    const musicPrev = document.querySelector('#music-prev');
+    const musicNext = document.querySelector('#music-next');
+    const musicLoop = document.querySelector('#music-loop');
+    const musicVolume = document.querySelector('#music-volume');
+    const musicVolumeRange = document.querySelector('#music-volume-range');
+    const musicPlaylistToggle = document.querySelector('#music-playlist-toggle');
+    const musicPlaylistPanel = document.querySelector('#music-playlist-panel');
+    const musicPlaylistList = document.querySelector('#music-playlist');
+    const musicPlaylistCount = document.querySelector('#music-playlist-count');
+    const musicMiniPlay = document.querySelector('#music-mini-play');
+    const musicMiniRestore = document.querySelector('#music-mini-restore');
+    const musicPlaylist = [];
+    let currentMusicIndex = 0;
+    let currentLyrics = [];
+    let savedMusicState = null;
+    musicAudio.autoplay = false;
+    musicAudio.volume = .8;
+
+    function formatMusicTime(seconds) {
+      if (!Number.isFinite(seconds)) return '0:00';
+      const minutes = Math.floor(seconds / 60);
+      return `${minutes}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
+    }
+
+    function parseLyrics(value) {
+      const lines = String(value || '').split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+      const metadata = { title: '', artist: '', album: '' };
+      let offset = 0;
+      const grouped = new Map();
+      const plain = [];
+      lines.forEach(line => {
+        const metadataMatch = line.match(/^\[(ti|ar|al|offset):\s*(.*?)\s*\]$/i);
+        if (metadataMatch) {
+          const key = metadataMatch[1].toLowerCase();
+          if (key === 'offset') offset = Number(metadataMatch[2]) || 0;
+          else metadata[{ ti: 'title', ar: 'artist', al: 'album' }[key]] = metadataMatch[2];
+          return;
+        }
+        const stamps = [...line.matchAll(/\[(\d{1,2}):(\d{2}(?:\.\d+)?)\]/g)];
+        const text = line.replace(/\[(\d{1,2}):(\d{2}(?:\.\d+)?)\]/g, '').trim();
+        if (!text) return;
+        if (!stamps.length) { plain.push({ time: null, text }); return; }
+        stamps.forEach(stamp => {
+          const time = Math.max(0, Number(stamp[1]) * 60 + Number(stamp[2]) + offset / 1000);
+          if (!grouped.has(time)) grouped.set(time, []);
+          if (!grouped.get(time).includes(text)) grouped.get(time).push(text);
+        });
+      });
+      const timed = [...grouped.entries()].map(([time, texts]) => ({ time, text: texts.join('\n') })).sort((a, b) => a.time - b.time);
+      return { lines: timed.length ? timed : plain, metadata };
+    }
+
+    function setLyrics(value, track) {
+      const parsed = parseLyrics(value || '暂无歌词\n把同名 LRC 文件放入 assets/music 文件夹');
+      currentLyrics = parsed.lines;
+      if (track) {
+        track.title = parsed.metadata.title || track.title;
+        track.artist = parsed.metadata.artist || track.artist;
+        track.album = parsed.metadata.album || track.album;
+        musicTitle.textContent = track.title || '未命名音乐';
+        musicArtist.textContent = [track.artist, track.album].filter(Boolean).join(' / ') || 'YEZI RADIO';
+      }
+      renderCurrentLyric(0);
+    }
+
+    function renderCurrentLyric(index) {
+      const lines = musicLyrics.querySelectorAll('.lyric-line');
+      if (!currentLyrics.length) currentLyrics = [{ time: null, text: '歌词还在整理中。' }];
+      const safeIndex = Math.max(0, Math.min(index, currentLyrics.length - 1));
+      [-2, -1, 0, 1, 2].forEach((offset, lineIndex) => {
+        const text = currentLyrics[safeIndex + offset]?.text || '';
+        lines[lineIndex].textContent = lineIndex === 2 ? text : text.replace(/\n+/g, ' / ');
+      });
+    }
+
+    function syncCurrentLyric() {
+      if (!currentLyrics.length) return;
+      if (currentLyrics[0].time !== null) {
+        let activeIndex = 0;
+        for (let index = 0; index < currentLyrics.length; index += 1) {
+          if (currentLyrics[index].time > musicAudio.currentTime) break;
+          activeIndex = index;
+        }
+        renderCurrentLyric(activeIndex);
+        return;
+      }
+      const ratio = musicAudio.duration ? musicAudio.currentTime / musicAudio.duration : 0;
+      renderCurrentLyric(Math.min(currentLyrics.length - 1, Math.floor(ratio * currentLyrics.length)));
+    }
+
+    function setMusicCover(url) {
+      if (!url) {
+        musicCoverImage.hidden = true;
+        musicCoverImage.removeAttribute('src');
+        musicCoverFallback.hidden = false;
+        return;
+      }
+      musicCoverImage.onerror = () => setMusicCover('');
+      musicCoverImage.src = url;
+      musicCoverImage.hidden = false;
+      musicCoverFallback.hidden = true;
+    }
+
+    function renderMusicPlaylist() {
+      musicPlaylistList.replaceChildren();
+      musicPlaylistCount.textContent = `${musicPlaylist.length} 首`;
+      if (!musicPlaylist.length) {
+        const empty = document.createElement('p');
+        empty.className = 'music-empty';
+        empty.textContent = '还没有可播放的音乐';
+        musicPlaylistList.appendChild(empty);
+        return;
+      }
+      musicPlaylist.forEach((track, index) => {
+        const button = document.createElement('button');
+        const marker = document.createElement('span');
+        const copy = document.createElement('span');
+        const title = document.createElement('strong');
+        const artist = document.createElement('small');
+        button.type = 'button';
+        button.className = `music-playlist-item${index === currentMusicIndex ? ' active' : ''}`;
+        button.dataset.musicIndex = String(index);
+        marker.textContent = index === currentMusicIndex ? '▶' : String(index + 1).padStart(2, '0');
+        title.textContent = track.title || `音乐 ${index + 1}`;
+        artist.textContent = track.artist || 'YEZI RADIO';
+        copy.append(title, artist);
+        button.append(marker, copy);
+        musicPlaylistList.appendChild(button);
+      });
+    }
+
+    function setMusicPlaylist(source) {
+      const entries = Array.isArray(source) ? source : [];
+      musicPlaylist.splice(0, musicPlaylist.length, ...entries.map((entry, index) => ({
+        id: entry.id || `track-${index + 1}`,
+        src: entry.audio || entry.src || '',
+        title: entry.title || `音乐 ${index + 1}`,
+        artist: entry.artist || 'YEZI RADIO',
+        album: entry.album || '',
+        cover: entry.cover || '',
+        lyrics: entry.lyrics || '',
+        lyricsText: null
+      })).filter(track => track.src));
+      const savedIndex = savedMusicState?.trackId ? musicPlaylist.findIndex(track => track.id === savedMusicState.trackId) : -1;
+      currentMusicIndex = savedIndex >= 0 ? savedIndex : 0;
+      setCurrentMusicTrack(false);
+    }
+
+    async function decodeLyricsResponse(response) {
+      const buffer = await response.arrayBuffer();
+      let lyrics = new TextDecoder('utf-8').decode(buffer);
+      if (lyrics.includes('�')) {
+        try { lyrics = new TextDecoder('gb18030').decode(buffer); } catch (error) { /* Keep UTF-8 fallback. */ }
+      }
+      return lyrics.replace(/^\uFEFF/, '').trim();
+    }
+
+    async function loadTrackLyrics(track) {
+      if (!track.lyrics) return '';
+      if (track.lyricsText !== null) return track.lyricsText;
+      try {
+        const response = await fetch(track.lyrics, { cache: 'no-cache' });
+        track.lyricsText = response.ok ? await decodeLyricsResponse(response) : '';
+      } catch (error) {
+        track.lyricsText = '';
+      }
+      return track.lyricsText;
+    }
+
+    async function setCurrentMusicTrack(autoplay) {
+      const track = musicPlaylist[currentMusicIndex];
+      if (!track?.src) {
+        musicTitle.textContent = '暂无音乐';
+        musicArtist.textContent = '请将音乐放入 assets/music';
+        musicStatus.textContent = '本地曲库为空';
+        setMusicCover('');
+        setLyrics('暂无歌词\n等待本地音乐文件');
+        renderMusicPlaylist();
+        return;
+      }
+      musicAudio.src = track.src;
+      musicAudio.load();
+      musicTitle.textContent = track.title || '未命名音乐';
+      musicArtist.textContent = [track.artist, track.album].filter(Boolean).join(' / ') || 'YEZI RADIO';
+      musicStatus.textContent = '已载入 · 点击播放';
+      setMusicCover(track.cover || '');
+      setLyrics('暂无歌词\n把同名 LRC 文件放入 assets/music 文件夹', track);
+      renderMusicPlaylist();
+      saveMusicPlayerState();
+      const trackId = track.id;
+      const lyrics = await loadTrackLyrics(track);
+      if (musicPlaylist[currentMusicIndex]?.id === trackId) {
+        setLyrics(lyrics, track);
+        renderMusicPlaylist();
+      }
+      if (autoplay) musicAudio.play().catch(() => { musicStatus.textContent = '请点击播放按钮启动音乐'; });
+    }
+
+    async function loadMusicLibrary() {
+      try {
+        const response = await fetch('assets/music/library.json', { cache: 'no-cache' });
+        if (!response.ok) throw new Error('music library unavailable');
+        setMusicPlaylist(await response.json());
+        musicStatus.textContent = musicPlaylist.length ? '本地曲库已加载' : '本地曲库为空';
+      } catch (error) {
+        setMusicPlaylist([]);
+        musicStatus.textContent = '无法读取本地曲库';
+      }
+    }
+
+    function closeMusicPopovers() {
+      musicPlaylistPanel.hidden = true;
+      musicPlaylistToggle.classList.remove('active');
+      musicPlaylistToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleMusicPopover(panel, button) {
+      const willOpen = panel.hidden;
+      panel.hidden = !willOpen;
+      button.classList.toggle('active', willOpen);
+      button.setAttribute('aria-expanded', String(willOpen));
+    }
+
+    const MUSIC_PLAYER_STATE_KEY = 'yezi-music-player-state-v3';
+    let musicPlayerDrag = null;
+
+    function saveMusicPlayerState() {
+      const rect = musicPlayer.getBoundingClientRect();
+      try {
+        localStorage.setItem(MUSIC_PLAYER_STATE_KEY, JSON.stringify({
+          left: Math.round(rect.left),
+          top: Math.round(rect.top),
+          mini: musicPlayer.classList.contains('music-mini'),
+          lyricsCollapsed: musicPlayer.classList.contains('lyrics-collapsed'),
+          trackId: musicPlaylist[currentMusicIndex]?.id || '',
+          volume: musicAudio.volume,
+          muted: musicAudio.muted,
+          loop: musicAudio.loop
+        }));
+      } catch (error) { /* Position memory is optional in private browsing. */ }
+    }
+
+    function clampMusicPlayerPosition(left, top) {
+      const width = musicPlayer.offsetWidth;
+      const height = musicPlayer.offsetHeight;
+      const viewportWidth = document.documentElement.clientWidth;
+      const viewportHeight = document.documentElement.clientHeight;
+      return {
+        left: Math.max(8, Math.min(left, viewportWidth - width - 8)),
+        top: Math.max(8, Math.min(top, viewportHeight - height - 8))
+      };
+    }
+
+    function dockMusicPlayer(top = musicPlayer.getBoundingClientRect().top, persist = true) {
+      closeMusicPopovers();
+      musicPlayer.classList.remove('is-dock-ready', 'is-dragging');
+      musicPlayer.classList.add('music-mini');
+      musicPlayer.style.left = 'auto';
+      musicPlayer.style.right = '8px';
+      musicPlayer.style.top = `${Math.max(8, Math.min(top, document.documentElement.clientHeight - 80))}px`;
+      if (persist) saveMusicPlayerState();
+    }
+
+    function restoreMusicPlayer(persist = true) {
+      const previousTop = musicPlayer.getBoundingClientRect().top;
+      musicPlayer.classList.remove('music-mini');
+      musicPlayer.style.right = 'auto';
+      const viewportWidth = document.documentElement.clientWidth;
+      const viewportHeight = document.documentElement.clientHeight;
+      const targetWidth = Math.min(316, viewportWidth - 32);
+      const targetHeight = musicPlayer.classList.contains('lyrics-collapsed') ? 267 : 403;
+      musicPlayer.style.left = `${Math.max(8, viewportWidth - targetWidth - 18)}px`;
+      musicPlayer.style.top = `${Math.max(8, Math.min(previousTop, viewportHeight - targetHeight - 8))}px`;
+      if (persist) saveMusicPlayerState();
+    }
+
+    function restoreSavedMusicPlayerState() {
+      try {
+        const state = JSON.parse(localStorage.getItem(MUSIC_PLAYER_STATE_KEY) || 'null');
+        if (!state) return;
+        savedMusicState = state;
+        musicPlayer.classList.toggle('lyrics-collapsed', Boolean(state.lyricsCollapsed));
+        musicLyricsToggle.classList.toggle('active', Boolean(state.lyricsCollapsed));
+        musicLyricsToggle.setAttribute('aria-pressed', String(!state.lyricsCollapsed));
+        musicLyricsToggle.setAttribute('aria-label', state.lyricsCollapsed ? '显示歌词' : '隐藏歌词');
+        if (Number.isFinite(state.volume)) musicAudio.volume = Math.max(0, Math.min(1, state.volume));
+        musicAudio.muted = Boolean(state.muted);
+        musicAudio.loop = Boolean(state.loop);
+        musicVolumeRange.value = String(Math.round(musicAudio.volume * 100));
+        musicPlayer.classList.toggle('is-muted', musicAudio.muted);
+        musicVolume.classList.toggle('active', musicAudio.muted);
+        musicLoop.classList.toggle('active', musicAudio.loop);
+        musicLoop.setAttribute('aria-pressed', String(musicAudio.loop));
+        if (state.mini) {
+          dockMusicPlayer(Number(state.top) || 94, false);
+          return;
+        }
+        if (Number.isFinite(state.left) && Number.isFinite(state.top)) {
+          const position = clampMusicPlayerPosition(state.left, state.top);
+          musicPlayer.style.left = `${position.left}px`;
+          musicPlayer.style.top = `${position.top}px`;
+          musicPlayer.style.right = 'auto';
+        }
+      } catch (error) { /* Invalid saved state falls back to CSS positioning. */ }
+    }
+
+    async function toggleMusicPlayback() {
+      if (!musicAudio.src) {
+        musicStatus.textContent = '本地曲库中没有音乐';
+        return;
+      }
+      if (!musicAudio.paused) {
+        musicAudio.pause();
+        return;
+      }
+      try {
+        await musicAudio.play();
+      } catch (error) {
+        musicStatus.textContent = error?.name === 'NotAllowedError' ? '请再次点击播放按钮' : '音乐格式不受支持';
+      }
+    }
+
+    restoreSavedMusicPlayerState();
+    loadMusicLibrary();
+
+    musicHeading.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || event.target.closest('button')) return;
+      const rect = musicPlayer.getBoundingClientRect();
+      musicPlayerDrag = { pointerId: event.pointerId, offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top };
+      musicHeading.setPointerCapture(event.pointerId);
+      musicPlayer.classList.add('is-dragging');
+      closeMusicPopovers();
+    });
+    function moveMusicPlayer(event) {
+      if (!musicPlayerDrag || musicPlayerDrag.pointerId !== event.pointerId) return;
+      const position = clampMusicPlayerPosition(event.clientX - musicPlayerDrag.offsetX, event.clientY - musicPlayerDrag.offsetY);
+      musicPlayer.style.left = `${position.left}px`;
+      musicPlayer.style.top = `${position.top}px`;
+      musicPlayer.style.right = 'auto';
+      musicPlayer.classList.toggle('is-dock-ready', position.left + musicPlayer.offsetWidth >= document.documentElement.clientWidth - 10);
+    }
+    window.addEventListener('pointermove', moveMusicPlayer);
+    function finishMusicPlayerDrag(event) {
+      if (!musicPlayerDrag || musicPlayerDrag.pointerId !== event.pointerId) return;
+      const shouldDock = musicPlayer.classList.contains('is-dock-ready');
+      musicPlayerDrag = null;
+      musicPlayer.classList.remove('is-dragging');
+      if (shouldDock) dockMusicPlayer(); else { musicPlayer.classList.remove('is-dock-ready'); saveMusicPlayerState(); }
+    }
+    musicHeading.addEventListener('pointerup', finishMusicPlayerDrag);
+    window.addEventListener('pointerup', finishMusicPlayerDrag);
+    musicHeading.addEventListener('pointercancel', () => {
+      musicPlayerDrag = null;
+      musicPlayer.classList.remove('is-dragging', 'is-dock-ready');
+    });
+    window.addEventListener('pointercancel', () => {
+      musicPlayerDrag = null;
+      musicPlayer.classList.remove('is-dragging', 'is-dock-ready');
+    });
+    musicMiniRestore.addEventListener('click', () => restoreMusicPlayer());
+    window.addEventListener('resize', () => {
+      if (musicPlayer.classList.contains('music-mini')) { dockMusicPlayer(musicPlayer.getBoundingClientRect().top); return; }
+      if (!musicPlayer.style.left) return;
+      const rect = musicPlayer.getBoundingClientRect();
+      const position = clampMusicPlayerPosition(rect.left, rect.top);
+      musicPlayer.style.left = `${position.left}px`;
+      musicPlayer.style.top = `${position.top}px`;
+      saveMusicPlayerState();
+    });
+
+    musicPlaylistToggle.addEventListener('click', () => toggleMusicPopover(musicPlaylistPanel, musicPlaylistToggle));
+    document.addEventListener('click', event => {
+      if (!musicPlayer.contains(event.target)) closeMusicPopovers();
+    });
+    musicPlaylistList.addEventListener('click', event => {
+      const item = event.target.closest('[data-music-index]');
+      if (!item) return;
+      currentMusicIndex = Number(item.dataset.musicIndex);
+      setCurrentMusicTrack(true);
+      closeMusicPopovers();
+    });
+    musicPlay.addEventListener('click', toggleMusicPlayback);
+    musicMiniPlay.addEventListener('click', toggleMusicPlayback);
+    musicPrev.addEventListener('click', () => {
+      if (musicPlaylist.length < 2) { musicStatus.textContent = '当前只有一首音乐'; return; }
+      currentMusicIndex = (currentMusicIndex - 1 + musicPlaylist.length) % musicPlaylist.length;
+      setCurrentMusicTrack(true);
+    });
+    musicNext.addEventListener('click', () => {
+      if (musicPlaylist.length < 2) { musicStatus.textContent = '当前只有一首音乐'; return; }
+      currentMusicIndex = (currentMusicIndex + 1) % musicPlaylist.length;
+      setCurrentMusicTrack(true);
+    });
+    musicLoop.addEventListener('click', () => {
+      musicAudio.loop = !musicAudio.loop;
+      musicLoop.classList.toggle('active', musicAudio.loop);
+      musicLoop.setAttribute('aria-pressed', String(musicAudio.loop));
+      musicStatus.textContent = musicAudio.loop ? '单曲循环已开启' : '顺序播放';
+      saveMusicPlayerState();
+    });
+    musicVolume.addEventListener('click', () => {
+      musicAudio.muted = !musicAudio.muted;
+      musicPlayer.classList.toggle('is-muted', musicAudio.muted);
+      musicVolume.classList.toggle('active', musicAudio.muted);
+      musicVolume.setAttribute('aria-pressed', String(musicAudio.muted));
+      musicVolume.setAttribute('aria-label', musicAudio.muted ? '恢复声音' : '静音');
+      saveMusicPlayerState();
+    });
+    musicVolumeRange.addEventListener('input', () => {
+      musicAudio.volume = Number(musicVolumeRange.value) / 100;
+      musicAudio.muted = false;
+      musicPlayer.classList.remove('is-muted');
+      musicVolume.classList.remove('active');
+      musicVolume.setAttribute('aria-pressed', 'false');
+      musicVolume.setAttribute('aria-label', '静音');
+      saveMusicPlayerState();
+    });
+    musicLyricsToggle.addEventListener('click', () => {
+      const collapsed = musicPlayer.classList.toggle('lyrics-collapsed');
+      musicLyricsToggle.classList.toggle('active', collapsed);
+      musicLyricsToggle.setAttribute('aria-pressed', String(!collapsed));
+      musicLyricsToggle.setAttribute('aria-label', collapsed ? '显示歌词' : '隐藏歌词');
+      saveMusicPlayerState();
+    });
+    musicAudio.addEventListener('timeupdate', () => {
+      const ratio = musicAudio.duration ? musicAudio.currentTime / musicAudio.duration : 0;
+      const percentage = ratio * 100;
+      musicProgressBar.style.width = `${percentage}%`;
+      musicProgress.setAttribute('aria-valuenow', String(Math.round(percentage)));
+      musicCurrentTime.textContent = formatMusicTime(musicAudio.currentTime);
+      syncCurrentLyric();
+    });
+    musicAudio.addEventListener('loadedmetadata', () => { musicDuration.textContent = formatMusicTime(musicAudio.duration); });
+    musicProgress.addEventListener('click', event => {
+      if (!musicAudio.duration) return;
+      const rect = musicProgress.getBoundingClientRect();
+      musicAudio.currentTime = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width)) * musicAudio.duration;
+    });
+    musicProgress.addEventListener('keydown', event => {
+      if (!musicAudio.duration || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      musicAudio.currentTime = Math.max(0, Math.min(musicAudio.duration, musicAudio.currentTime + (event.key === 'ArrowRight' ? 5 : -5)));
+    });
+    musicAudio.addEventListener('play', () => { musicPlayer.classList.add('is-playing'); musicPlay.setAttribute('aria-label', '暂停背景音乐'); musicMiniPlay.setAttribute('aria-label', '暂停背景音乐'); musicStatus.textContent = '正在播放'; renderMusicPlaylist(); });
+    musicAudio.addEventListener('pause', () => { musicPlayer.classList.remove('is-playing'); musicPlay.setAttribute('aria-label', '播放背景音乐'); musicMiniPlay.setAttribute('aria-label', '播放背景音乐'); if (musicAudio.currentTime > 0 && musicAudio.currentTime < musicAudio.duration) musicStatus.textContent = '已暂停'; });
+    musicAudio.addEventListener('ended', () => {
+      if (!musicAudio.loop && musicPlaylist.length > 1) {
+        currentMusicIndex = (currentMusicIndex + 1) % musicPlaylist.length;
+        setCurrentMusicTrack(true);
+        return;
+      }
+      musicStatus.textContent = '播放结束';
+      musicPlayer.classList.remove('is-playing');
+    });
+    musicAudio.addEventListener('error', () => { musicStatus.textContent = '当前音乐文件无法播放'; musicPlayer.classList.remove('is-playing'); });
+
+    function bindTilt(element, strength) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      element.addEventListener('pointermove', event => {
+        const rect = element.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - .5;
+        const y = (event.clientY - rect.top) / rect.height - .5;
+        element.style.setProperty('--tilt-x', `${-y * strength}deg`);
+        element.style.setProperty('--tilt-y', `${x * strength}deg`);
+      });
+      element.addEventListener('pointerleave', () => {
+        element.style.setProperty('--tilt-x', '0deg');
+        element.style.setProperty('--tilt-y', '0deg');
+      });
+    }
+    bindTilt(document.querySelector('.portrait-card'), 6);
+    bindTilt(document.querySelector('.id-card'), 3);
+    document.querySelector('.hero-content').addEventListener('pointermove', event => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      event.currentTarget.style.setProperty('--pointer-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
+      event.currentTarget.style.setProperty('--pointer-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
+    });
+
+    function cleanEditableHtml(field) {
+      const template = document.createElement('template');
+      template.innerHTML = field.innerHTML;
+      template.content.querySelectorAll('*').forEach(element => {
+        element.removeAttribute('style');
+        [...element.attributes].forEach(attribute => {
+          if (attribute.name.toLowerCase().startsWith('on')) element.removeAttribute(attribute.name);
+        });
+      });
+      return template.innerHTML;
+    }
+
+    saveSiteEdit.addEventListener('click', async () => {
+      saveSiteEdit.disabled = true;
+      editorStatus.innerHTML = '<strong>正在保存...</strong>内容将写入项目文件。';
+      const content = Object.fromEntries(siteContentFields.map(field => {
+        const cleanHtml = cleanEditableHtml(field);
+        field.innerHTML = cleanHtml;
+        return [field.dataset.contentKey, cleanHtml];
+      }));
+      content.__timeline_layout = JSON.stringify(getTimelineLayout());
+      try {
+        const response = await fetch('/_editor/save', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Editor-Token': editorToken
+          },
+          body: JSON.stringify(content)
+        });
+        if (!response.ok) {
+          if (response.status === 403) editorToken = '';
+          throw new Error('save failed');
+        }
+        setSiteEditMode(false);
+        syncExtraMissionRows();
+        refreshCommentMarquee();
+        editorStatus.innerHTML = '<strong>保存成功</strong>内容已写入 content.json。';
+      } catch (error) {
+        editorStatus.innerHTML = '<strong>保存失败</strong>密码无效，或本地编辑服务未启动。';
+      } finally {
+        saveSiteEdit.disabled = false;
+      }
+    });
+
+    cancelSiteEdit.addEventListener('click', () => {
+      activeEditFields.forEach(field => {
+        const previous = siteEditSnapshot.get(field.dataset.contentKey);
+        if (typeof previous === 'string') field.innerHTML = previous;
+      });
+      const rowById = new Map(allMissionRows.map(row => [row.dataset.missionId, row]));
+      timelineLayoutSnapshot.forEach(snapshot => {
+        const row = rowById.get(snapshot.id);
+        if (!row) return;
+        setMissionLane(row, snapshot.lane);
+        row.classList.toggle('is-deleted', snapshot.deleted);
+        row.classList.toggle('is-empty', snapshot.empty);
+        timelineList.appendChild(row);
+      });
+      setSiteEditMode(false);
+      syncExtraMissionRows();
+      refreshCommentMarquee();
+      editorStatus.innerHTML = '<strong>已取消</strong>本次未保存的修改已还原。';
+    });
+
+    document.addEventListener('click', event => {
+      if (isSiteEditing && event.target.closest('[data-site-editable]')) event.preventDefault();
+    }, true);
+
+    document.addEventListener('keydown', event => {
+      if (!isSiteEditing) return;
+      if (event.key === 'Escape') cancelSiteEdit.click();
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        saveSiteEdit.click();
+      }
+    });
+  </script>
+</body>
+</html>

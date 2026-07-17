@@ -1,0 +1,84 @@
+[
+  {
+    "id": "archive-20260716-checklist",
+    "date": "2026-07-16",
+    "title": "把复杂问题拆成一张清单",
+    "summary": "关于结构、节奏和如何开始做第一步。",
+    "category": "product",
+    "tags": [
+      "产品",
+      "方法"
+    ]
+  },
+  {
+    "id": "archive-20260708-aigc",
+    "date": "2026-07-08",
+    "title": "这是一份还在生长的 AIGC 观察",
+    "summary": "它现在很乱，但乱里藏着很多新工具。",
+    "category": "aigc",
+    "tags": [
+      "AIGC"
+    ]
+  },
+  {
+    "id": "archive-20260624-exhibition",
+    "date": "2026-06-24",
+    "title": "周末去看了一场很小的展",
+    "summary": "记住了三种颜色和一个下午。",
+    "category": "daily",
+    "tags": [
+      "生活"
+    ]
+  },
+  {
+    "id": "archive-20260519-website",
+    "date": "2026-05-19",
+    "title": "重新整理我的个人网站",
+    "summary": "让作品、项目和生活可以在同一张地图上相遇。",
+    "category": "product",
+    "tags": [
+      "建站"
+    ]
+  },
+  {
+    "id": "archive-20251208-growth",
+    "date": "2025-12-08",
+    "title": "数数每一个夜晚奋斗的自己",
+    "summary": "慢一点也没有关系，保持持续更新。",
+    "category": "daily",
+    "tags": [
+      "成长"
+    ]
+  },
+  {
+    "id": "archive-20250817-prototype",
+    "date": "2025-08-17",
+    "title": "第一次把一个想法做成页面",
+    "summary": "从草稿到可点击原型，快乐很具体。",
+    "category": "product",
+    "tags": [
+      "代码"
+    ]
+  },
+  {
+    "id": "archive-20250419-talent",
+    "date": "2025-04-19",
+    "title": "关于“擅长”这件事",
+    "summary": "所谓天赋，也许只是愿意多练习几次。",
+    "category": "daily",
+    "tags": [
+      "随笔"
+    ]
+  },
+  {
+    "id": "archive-1784264110758315600",
+    "date": "2026-06-22",
+    "title": "niko夺冠",
+    "summary": "2026科隆major冠军",
+    "content": "",
+    "category": "games",
+    "tags": [
+      "csgo"
+    ]
+  }
+]

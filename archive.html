@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>归档 · YEZI</title>
+  <link rel="stylesheet" href="subpages.css">
+</head>
+<body>
+  <div class="nav-wrap"><nav class="nav" aria-label="主导航">
+    <a class="brand" href="index.html">YEZI<i>.</i></a><button class="menu" type="button" aria-label="打开导航">☰</button>
+    <div class="nav-links"><a class="nav-link" href="index.html#home">首页</a><a class="nav-link" href="index.html#about">关于我</a><a class="nav-link active" href="archive.html">归档</a><a class="nav-link" href="works.html">作品集</a><a class="nav-link" href="projects.html">项目</a></div>
+    <a class="nav-mail" href="mailto:hello@example.com" aria-label="联系我"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+  </nav></div>
+
+  <main class="shell page">
+    <span class="eyebrow">ARCHIVE / 文档归档</span>
+    <h1 class="page-title">把生活折叠成<br><span class="marker blue">一条时间线</span></h1>
+    <p class="lead">产品笔记、生活碎片、AIGC 实验和一些还没有想明白的问题，都先放在这里。</p>
+
+    <div class="archive-layout">
+      <aside>
+        <section class="profile-side card"><img src="assets/profile-id.png" alt="椰子头像"><h2>椰子 / YEZI</h2><p>记录生活的产品人</p><div class="social"><span>PRODUCT</span><span>AI</span></div></section>
+        <section class="announce card"><h3>公告 / NOTICE</h3><p>这里是正在生长的数字花园，欢迎随意翻阅，也欢迎留下新的关键词。</p></section>
+      </aside>
+
+      <section class="archive-main">
+        <form class="admin-access" id="admin-access"><input id="admin-password" type="password" value="" placeholder="管理员密码" autocomplete="new-password" autocapitalize="none" spellcheck="false" aria-label="管理员密码" readonly data-lpignore="true" data-1p-ignore="true"><button id="admin-unlock" type="submit">管理日记</button><span id="admin-status" role="status"></span></form>
+        <form class="compose card" id="compose-form" hidden>
+          <div class="compose-head"><div><span class="compose-kicker">ADMIN NOTEBOOK</span><h3 id="compose-title">发布一篇新日记</h3></div><button class="admin-logout" id="admin-logout" type="button">退出管理</button></div>
+          <input id="doc-id" type="hidden">
+          <div class="compose-grid">
+            <label><span>日期</span><input id="doc-date" type="date" required></label>
+            <label class="compose-title-field"><span>标题</span><input id="doc-title" maxlength="80" placeholder="给今天起一个标题" required></label>
+            <label><span>分类</span><select id="doc-category" aria-label="文档分类" required><option value="daily">日常分享</option><option value="product">产品笔记</option><option value="aigc">AIGC</option><option value="games">游戏日常</option></select></label>
+            <label class="compose-tag-field"><span>标签</span><input id="doc-tag" maxlength="120" placeholder="生活 灵感 随笔"></label>
+            <label class="compose-wide"><span>摘要</span><textarea id="doc-summary" maxlength="240" placeholder="列表中显示的一句话摘要"></textarea></label>
+            <label class="compose-wide"><span>正文</span><textarea class="doc-content" id="doc-content" maxlength="8000" placeholder="像记事本一样写下今天发生的事……"></textarea></label>
+            <label class="compose-wide compose-image-field"><span>图片（最多 9 张，每张不超过 8MB）</span><input id="doc-images" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
+            <div class="compose-image-preview" id="compose-image-preview" hidden></div>
+            <div class="compose-actions"><button id="doc-submit" type="submit">发布日记 →</button><button class="secondary" id="doc-cancel-edit" type="button" hidden>取消编辑</button></div>
+            <div class="compose-status" id="compose-status" role="status"></div>
+          </div>
+        </form>
+        <div class="archive-tools"><label class="archive-search"><span aria-hidden="true">⌕</span><input id="archive-search" type="search" placeholder="搜索标题、正文或标签" autocomplete="off" aria-label="搜索归档"></label><span id="archive-result-count"></span></div>
+        <div class="archive-tabs" id="archive-tabs"></div>
+        <section class="timeline card" id="archive-list" aria-live="polite"></section>
+      </section>
+
+      <aside class="stats card"><h3>站点数据</h3><div class="stat"><span>文档</span><b id="doc-count">—</b></div><div class="stat"><span>分类</span><b id="category-count">—</b></div><div class="stat"><span>标签</span><b id="tag-count">—</b></div><div class="stat"><span>总字数</span><b id="word-count">—</b></div><div class="stat"><span>运行时长</span><b id="running-days">—</b></div><div class="stat"><span>最近活动</span><b id="recent-activity">—</b></div><div class="announce"><h3>一句话</h3><p>今天也有在认真生活，存档成功。</p></div></aside>
+    </div>
+    <footer class="footer"><span>© 2026 YEZI. ALL RIGHTS RESERVED.</span><span>ARCHIVE / KEEP MAKING NOTES</span></footer>
+  </main>
+  <div class="archive-lightbox" id="archive-lightbox" role="dialog" aria-modal="true" aria-label="图片预览" hidden><button type="button" aria-label="关闭图片">×</button><img id="archive-lightbox-image" alt=""></div>
+  <script>
+    const menu=document.querySelector('.menu'),links=document.querySelector('.nav-links');
+    const categories={all:'全部',daily:'日常分享',product:'产品笔记',aigc:'AIGC',games:'游戏日常'};
+    const form=document.querySelector('#compose-form'),list=document.querySelector('#archive-list'),tabs=document.querySelector('#archive-tabs'),status=document.querySelector('#compose-status'),adminAccess=document.querySelector('#admin-access'),adminStatus=document.querySelector('#admin-status'),adminPassword=document.querySelector('#admin-password'),searchInput=document.querySelector('#archive-search'),imageInput=document.querySelector('#doc-images'),imagePreview=document.querySelector('#compose-image-preview'),lightbox=document.querySelector('#archive-lightbox'),lightboxImage=document.querySelector('#archive-lightbox-image');
+    let documents=[],activeCategory='all',searchTerm='',editorToken='',archiveImages=[],pendingImages=[];
+
+    menu.addEventListener('click',()=>{links.classList.toggle('open');menu.textContent=links.classList.contains('open')?'×':'☰';});
+    function pad(value){return String(value).padStart(2,'0');}
+    function countWords(text){return (text.match(/[\u3400-\u9fff]|[A-Za-z0-9]+/g)||[]).length;}
+    function relativeActivity(date){const days=Math.max(0,Math.floor((new Date().setHours(0,0,0,0)-new Date(`${date}T00:00:00`).getTime())/86400000));return days===0?'今天':days===1?'昨天':`${days} 天前`;}
+    function getVisibleDocuments(){return documents.filter(doc=>{if(activeCategory!=='all'&&doc.category!==activeCategory)return false;if(!searchTerm)return true;return `${doc.title} ${doc.summary||''} ${doc.content||''} ${(doc.tags||[]).join(' ')}`.toLocaleLowerCase().includes(searchTerm);});}
+    function clearPendingImages(){pendingImages.forEach(item=>URL.revokeObjectURL(item.previewUrl));pendingImages=[];}
+    function renderImagePreview(){imagePreview.replaceChildren();const items=[...archiveImages.map((url,index)=>({src:url,index,kind:'saved'})),...pendingImages.map((item,index)=>({src:item.previewUrl,index,kind:'pending'}))];imagePreview.hidden=!items.length;items.forEach(item=>{const figure=document.createElement('figure');const image=document.createElement('img');image.src=item.src;image.alt='待发布图片预览';const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.ariaLabel='移除图片';remove.dataset.removeImage=item.kind;remove.dataset.imageIndex=item.index;figure.append(image,remove);imagePreview.append(figure);});}
+    function resetComposeForm(){clearPendingImages();archiveImages=[];form.reset();renderImagePreview();document.querySelector('#doc-id').value='';document.querySelector('#doc-date').value=new Date().toISOString().slice(0,10);document.querySelector('#compose-title').textContent='发布一篇新日记';document.querySelector('#doc-submit').textContent='发布日记 →';document.querySelector('#doc-cancel-edit').hidden=true;status.textContent='';}
+    function setAdminMode(enabled){form.hidden=!enabled;adminAccess.hidden=enabled;if(enabled)resetComposeForm();renderDocs();}
+    function resetAdminSession(){editorToken='';adminPassword.value='';adminPassword.readOnly=true;adminStatus.textContent='';resetComposeForm();setAdminMode(false);}
+    function expireAdminSession(message='管理员会话已失效，请重新输入密码。'){resetAdminSession();adminStatus.textContent=message;}
+    function renderTabs(){tabs.replaceChildren();Object.entries(categories).forEach(([key,label])=>{const count=key==='all'?documents.length:documents.filter(doc=>doc.category===key).length;const button=document.createElement('button');button.type='button';button.className=`archive-tab${activeCategory===key?' active':''}`;button.dataset.category=key;button.textContent=`${label} ${pad(count)}`;button.addEventListener('click',()=>{activeCategory=key;renderTabs();renderDocs();});tabs.append(button);});}
+    function createAdminActions(doc){const actions=document.createElement('div');actions.className='entry-actions';const edit=document.createElement('button');edit.type='button';edit.textContent='编辑';edit.dataset.action='edit';edit.dataset.id=doc.id;const remove=document.createElement('button');remove.type='button';remove.textContent='删除';remove.className='danger';remove.dataset.action='delete';remove.dataset.id=doc.id;actions.append(edit,remove);return actions;}
+    function createEntryImages(doc){const grid=document.createElement('div');const images=(doc.images||[]).slice(0,9);grid.className='entry-images';grid.dataset.count=Math.min(images.length,3);images.forEach((url,index)=>{const button=document.createElement('button');button.type='button';button.className='entry-image';button.dataset.lightboxImage=url;button.dataset.imageAlt=`${doc.title}，第 ${index+1} 张图片`;const image=document.createElement('img');image.src=url;image.alt=button.dataset.imageAlt;image.loading='lazy';button.append(image);grid.append(button);});return grid;}
+    function renderDocs(){const visible=getVisibleDocuments();document.querySelector('#archive-result-count').textContent=`显示 ${visible.length} / ${documents.length} 篇`;list.replaceChildren();if(!visible.length){const empty=document.createElement('p');empty.className='archive-empty';empty.textContent=searchTerm?'没有找到匹配的日记。':'这个分类还没有文档。';list.append(empty);return;}const years=new Map();visible.forEach(doc=>{const year=doc.date.slice(0,4);if(!years.has(year))years.set(year,[]);years.get(year).push(doc);});years.forEach((docs,year)=>{const block=document.createElement('div');block.className='year-block';block.innerHTML='<div class="year"></div><div class="year-line"></div><div class="entries"></div>';block.querySelector('.year').textContent=year;const entries=block.querySelector('.entries');docs.forEach(doc=>{const article=document.createElement('article');article.className='entry';article.dataset.id=doc.id;const time=document.createElement('time');time.dateTime=doc.date;time.textContent=doc.date.slice(5);const body=document.createElement('div');body.className='entry-body';const heading=document.createElement('h3');heading.textContent=doc.title;const summary=document.createElement('p');summary.textContent=doc.summary||doc.content?.slice(0,80)||'一条刚刚发布的记录。';const tags=document.createElement('small');tags.textContent=(doc.tags||[]).map(tag=>`#${tag}`).join(' ')||`#${categories[doc.category]||'未分类'}`;body.append(heading,summary);if(doc.content){const details=document.createElement('details');const label=document.createElement('summary');label.textContent='展开全文';const content=document.createElement('div');content.className='entry-content';content.textContent=doc.content;details.append(label,content);body.append(details);}if(doc.images?.length)body.append(createEntryImages(doc));article.append(time,body,tags);if(editorToken)article.append(createAdminActions(doc));entries.append(article);});list.append(block);});}
+    function renderStats(){document.querySelector('#doc-count').textContent=documents.length;document.querySelector('#category-count').textContent=pad(new Set(documents.map(doc=>doc.category).filter(Boolean)).size);document.querySelector('#tag-count').textContent=pad(new Set(documents.flatMap(doc=>doc.tags||[]).map(tag=>tag.toLowerCase())).size);document.querySelector('#word-count').textContent=documents.reduce((total,doc)=>total+countWords(`${doc.title} ${doc.summary||''} ${doc.content||''}`),0).toLocaleString('zh-CN');if(!documents.length){document.querySelector('#running-days').textContent='0 天';document.querySelector('#recent-activity').textContent='暂无';return;}const oldest=documents[documents.length-1].date;const running=Math.max(1,Math.floor((new Date().setHours(0,0,0,0)-new Date(`${oldest}T00:00:00`).getTime())/86400000)+1);document.querySelector('#running-days').textContent=`${running} 天`;document.querySelector('#recent-activity').textContent=relativeActivity(documents[0].date);}
+    async function loadDocuments(){const response=await fetch('/archive-docs.json',{cache:'no-store'});if(!response.ok)throw new Error('无法读取归档数据');const data=await response.json();documents=(Array.isArray(data)?data:[]).sort((a,b)=>b.date.localeCompare(a.date)||String(b.id).localeCompare(String(a.id)));renderTabs();renderDocs();renderStats();}
+    function startEditing(doc){clearPendingImages();archiveImages=[...(doc.images||[])];imageInput.value='';renderImagePreview();document.querySelector('#doc-id').value=doc.id;document.querySelector('#doc-date').value=doc.date;document.querySelector('#doc-title').value=doc.title;document.querySelector('#doc-category').value=doc.category;document.querySelector('#doc-tag').value=(doc.tags||[]).join(' ');document.querySelector('#doc-summary').value=doc.summary||'';document.querySelector('#doc-content').value=doc.content||'';document.querySelector('#compose-title').textContent='编辑这篇日记';document.querySelector('#doc-submit').textContent='保存修改 →';document.querySelector('#doc-cancel-edit').hidden=false;status.textContent='';form.scrollIntoView({behavior:'smooth',block:'start'});}
+    async function uploadPendingImages(){return Promise.all(pendingImages.map(async item=>{const response=await fetch('/_editor/archive-image',{method:'POST',headers:{'Content-Type':item.file.type,'X-Editor-Token':editorToken},body:item.file});if(response.status===403){const error=new Error('session expired');error.sessionExpired=true;throw error;}if(!response.ok)throw new Error('image upload failed');return (await response.json()).url;}));}
+
+    adminPassword.addEventListener('pointerdown',()=>{adminPassword.readOnly=false;});
+    adminPassword.addEventListener('keydown',()=>{adminPassword.readOnly=false;});
+    adminAccess.addEventListener('submit',async event=>{event.preventDefault();const password=adminPassword.value;if(!password)return;adminStatus.textContent='正在验证…';try{const response=await fetch('/_editor/unlock',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});if(!response.ok)throw new Error();editorToken=(await response.json()).token;adminPassword.value='';adminStatus.textContent='';setAdminMode(true);}catch(error){adminPassword.value='';adminStatus.textContent='密码错误或编辑服务未启动。';}});
+    document.querySelector('#admin-logout').addEventListener('click',()=>resetAdminSession());
+    document.querySelector('#doc-cancel-edit').addEventListener('click',()=>resetComposeForm());
+    imageInput.addEventListener('change',()=>{const selected=[...imageInput.files];const allowed=new Set(['image/jpeg','image/png','image/webp']);const valid=selected.filter(file=>allowed.has(file.type)&&file.size>0&&file.size<=8*1024*1024);const room=Math.max(0,9-archiveImages.length-pendingImages.length);valid.slice(0,room).forEach(file=>pendingImages.push({file,previewUrl:URL.createObjectURL(file)}));imageInput.value='';renderImagePreview();if(valid.length!==selected.length)status.textContent='已忽略格式不支持或超过 8MB 的图片。';else if(valid.length>room)status.textContent='每篇日记最多展示 9 张图片。';else status.textContent='';});
+    imagePreview.addEventListener('click',event=>{const button=event.target.closest('[data-remove-image]');if(!button)return;const index=Number(button.dataset.imageIndex);if(button.dataset.removeImage==='saved')archiveImages.splice(index,1);else{URL.revokeObjectURL(pendingImages[index].previewUrl);pendingImages.splice(index,1);}renderImagePreview();});
+    searchInput.addEventListener('input',()=>{searchTerm=searchInput.value.trim().toLocaleLowerCase();renderDocs();});
+    form.addEventListener('submit',async event=>{event.preventDefault();const tags=document.querySelector('#doc-tag').value.split(/[\s,，]+/).map(tag=>tag.replace(/^#/,'')).filter(Boolean);const documentData={id:document.querySelector('#doc-id').value,date:document.querySelector('#doc-date').value,title:document.querySelector('#doc-title').value.trim(),category:document.querySelector('#doc-category').value,tags,summary:document.querySelector('#doc-summary').value.trim(),content:document.querySelector('#doc-content').value.trim(),images:[]};status.textContent=pendingImages.length?'正在上传图片…':documentData.id?'正在保存修改…':'正在发布…';try{if(pendingImages.length){archiveImages.push(...await uploadPendingImages());clearPendingImages();renderImagePreview();}documentData.images=[...archiveImages];status.textContent=documentData.id?'正在保存修改…':'正在发布…';const response=await fetch('/_editor/archive',{method:'POST',headers:{'Content-Type':'application/json','X-Editor-Token':editorToken},body:JSON.stringify(documentData)});if(response.status===403){expireAdminSession();return;}if(!response.ok)throw new Error();status.textContent=documentData.id?'修改已保存。':'日记发布成功。';await loadDocuments();resetComposeForm();}catch(error){if(error.sessionExpired){expireAdminSession();return;}status.textContent='保存失败，请检查图片、内容格式或本地编辑服务。';}});
+    list.addEventListener('click',async event=>{const imageButton=event.target.closest('[data-lightbox-image]');if(imageButton){lightboxImage.src=imageButton.dataset.lightboxImage;lightboxImage.alt=imageButton.dataset.imageAlt;lightbox.hidden=false;return;}const button=event.target.closest('[data-action]');if(!button||!editorToken)return;const doc=documents.find(item=>item.id===button.dataset.id);if(!doc)return;if(button.dataset.action==='edit'){startEditing(doc);return;}if(!confirm(`确定删除《${doc.title}》吗？删除后无法恢复。`))return;button.disabled=true;try{const response=await fetch(`/_editor/archive?id=${encodeURIComponent(doc.id)}`,{method:'DELETE',headers:{'X-Editor-Token':editorToken}});if(response.status===403){expireAdminSession();return;}if(!response.ok)throw new Error();await loadDocuments();status.textContent='日记已删除。';}catch(error){button.disabled=false;status.textContent='删除失败，请稍后重试。';}});
+    function closeLightbox(){lightbox.hidden=true;lightboxImage.src='';}
+    lightbox.querySelector('button').addEventListener('click',closeLightbox);
+    lightbox.addEventListener('click',event=>{if(event.target===lightbox)closeLightbox();});
+    window.addEventListener('keydown',event=>{if(event.key==='Escape'&&!lightbox.hidden)closeLightbox();});
+    window.addEventListener('pagehide',resetAdminSession);
+    window.addEventListener('pageshow',event=>{if(event.persisted)resetAdminSession();adminPassword.value='';adminPassword.readOnly=true;});
+    resetAdminSession();
+    loadDocuments().catch(()=>{list.innerHTML='<p class="archive-empty">归档数据加载失败，请确认本地服务已启动。</p>';});
+  </script>
+</body>
+</html>

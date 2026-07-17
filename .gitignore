@@ -1,0 +1,8 @@
+.editor-auth.json
+__pycache__/
+.codex/
+plugins/
+*.pyc
+*.tmp
+.DS_Store
+Thumbs.db
