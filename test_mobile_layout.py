@@ -6,6 +6,16 @@ from pathlib import Path
 INDEX_HTML = Path(__file__).with_name("index.html").read_text(encoding="utf-8")
 
 
+def extract_style_block(source):
+    style_opening = re.search(r"<style(?:\s[^>]*)?>", source)
+    if style_opening is None:
+        raise ValueError("missing style block")
+    style_closing = source.find("</style>", style_opening.end())
+    if style_closing == -1:
+        raise ValueError("unclosed style block")
+    return source[style_opening.end():style_closing]
+
+
 def extract_braced_block(source, opening_brace):
     depth = 0
     for index in range(opening_brace, len(source)):
@@ -57,6 +67,18 @@ def find_rule(source, required_selectors):
     return None
 
 
+def find_exact_rule(source, required_selectors):
+    required = {normalize_selector(selector) for selector in required_selectors}
+    for selector_source, body in iter_css_rules(source):
+        selectors = {
+            normalize_selector(selector)
+            for selector in selector_source.split(",")
+        }
+        if selectors == required:
+            return body
+    return None
+
+
 def parse_declarations(body):
     declarations = {}
     for declaration in body.split(";"):
@@ -92,7 +114,8 @@ def extract_event_listener(source, event_name):
 class MobileLayoutTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.mobile_css = extract_mobile_media_block(INDEX_HTML)
+        cls.stylesheet_css = extract_style_block(INDEX_HTML)
+        cls.mobile_css = extract_mobile_media_block(cls.stylesheet_css)
 
     def test_mobile_player_is_compact_notification(self):
         player_rule = find_rule(
@@ -221,6 +244,15 @@ class MobileLayoutTests(unittest.TestCase):
         )
 
     def test_mobile_timeline_overrides_lane_columns(self):
+        row_rule = find_rule(self.mobile_css, {".mission-row"})
+        self.assertIsNotNone(row_rule, "the timeline row should have a mobile rule")
+        row_declarations = parse_declarations(row_rule)
+        self.assertEqual(row_declarations.get("display"), "grid")
+        self.assertEqual(
+            row_declarations.get("grid-template-columns"),
+            "32px 1fr",
+        )
+
         lane_rule = find_rule(
             self.mobile_css,
             {
@@ -232,7 +264,44 @@ class MobileLayoutTests(unittest.TestCase):
             lane_rule,
             "both timeline lanes should share one mobile override rule",
         )
-        self.assertEqual(parse_declarations(lane_rule).get("grid-column"), "2")
+        lane_declarations = parse_declarations(lane_rule)
+        self.assertEqual(lane_declarations.get("grid-column"), "2")
+        self.assertEqual(lane_declarations.get("grid-row"), "1")
+        self.assertEqual(lane_declarations.get("width"), "100%")
+        self.assertEqual(lane_declarations.get("margin"), "8px 0")
+
+        dot_rule = find_rule(self.mobile_css, {".mission-row .mission-dot"})
+        self.assertIsNotNone(
+            dot_rule,
+            "the timeline dot should use a specific mobile override rule",
+        )
+        dot_declarations = parse_declarations(dot_rule)
+        self.assertEqual(dot_declarations.get("grid-column"), "1")
+        self.assertEqual(dot_declarations.get("grid-row"), "1")
+
+        desktop_lanes = (
+            ('.mission-row[data-lane="main"] .mission-card', "1"),
+            ('.mission-row[data-lane="side"] .mission-card', "3"),
+        )
+        for selector, column in desktop_lanes:
+            with self.subTest(desktop_lane=selector):
+                desktop_rule = find_rule(self.stylesheet_css, {selector})
+                self.assertIsNotNone(desktop_rule)
+                desktop_declarations = parse_declarations(desktop_rule)
+                self.assertEqual(desktop_declarations.get("grid-column"), column)
+
+        mobile_shadows = (
+            ('.mission-row[data-lane="main"] .mission-card', "var(--blue)"),
+            ('.mission-row[data-lane="side"] .mission-card', "var(--pink)"),
+        )
+        for selector, color in mobile_shadows:
+            with self.subTest(mobile_shadow=selector):
+                shadow_rule = find_exact_rule(self.mobile_css, {selector})
+                self.assertIsNotNone(shadow_rule)
+                self.assertEqual(
+                    parse_declarations(shadow_rule).get("box-shadow"),
+                    f"4px 4px 0 {color}",
+                )
 
 
 if __name__ == "__main__":

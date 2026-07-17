@@ -692,8 +692,16 @@
       .timeline-board::before { left: 20px; }
       .lane-label.side { right: 18px; }
       .mission-row { display: grid; grid-template-columns: 32px 1fr; min-height: auto; }
-      .mission-dot { grid-column: 1; grid-row: 1; }
-      .mission-card.main, .mission-card.side { grid-column: 2; grid-row: 1; margin: 8px 0; }
+      .mission-row .mission-dot { grid-column: 1; grid-row: 1; }
+      .mission-row[data-lane="main"] .mission-card,
+      .mission-row[data-lane="side"] .mission-card {
+        grid-column: 2;
+        grid-row: 1;
+        width: 100%;
+        margin: 8px 0;
+      }
+      .mission-row[data-lane="main"] .mission-card { box-shadow: 4px 4px 0 var(--blue); }
+      .mission-row[data-lane="side"] .mission-card { box-shadow: 4px 4px 0 var(--pink); }
     }
 
     @media (prefers-reduced-motion: reduce) {
