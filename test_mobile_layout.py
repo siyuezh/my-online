@@ -67,6 +67,28 @@ def parse_declarations(body):
     return declarations
 
 
+def extract_js_function(source, name):
+    function_match = re.search(
+        rf"function\s+{re.escape(name)}\s*\([^)]*\)\s*\{{",
+        source,
+    )
+    if function_match is None:
+        return None
+    body, _ = extract_braced_block(source, function_match.end() - 1)
+    return body
+
+
+def extract_event_listener(source, event_name):
+    listener_match = re.search(
+        rf"window\.addEventListener\(\s*['\"]{re.escape(event_name)}['\"]\s*,\s*\(\)\s*=>\s*\{{",
+        source,
+    )
+    if listener_match is None:
+        return None
+    body, _ = extract_braced_block(source, listener_match.end() - 1)
+    return body
+
+
 class MobileLayoutTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -152,6 +174,50 @@ class MobileLayoutTests(unittest.TestCase):
         self.assertEqual(
             parse_declarations(hidden_rule).get("display"),
             "none !important",
+        )
+
+    def test_mobile_player_does_not_overwrite_desktop_position(self):
+        layout_helper = extract_js_function(
+            INDEX_HTML,
+            "isMobileMusicPlayerLayout",
+        )
+        self.assertIsNotNone(layout_helper)
+        self.assertRegex(
+            layout_helper,
+            r"window\.matchMedia\(\s*['\"]\(max-width:\s*680px\)['\"]\s*\)\.matches",
+        )
+
+        save_body = extract_js_function(INDEX_HTML, "saveMusicPlayerState")
+        self.assertIsNotNone(save_body)
+        self.assertIn("const nextState = {", save_body)
+        for state_name in (
+            "mini",
+            "lyricsCollapsed",
+            "trackId",
+            "volume",
+            "muted",
+            "loop",
+        ):
+            with self.subTest(saved_state=state_name):
+                self.assertRegex(save_body, rf"\b{state_name}\s*:")
+        self.assertRegex(
+            save_body,
+            r"if\s*\(\s*!isMobileMusicPlayerLayout\(\)\s*\)\s*\{[\s\S]*?nextState\.left\s*=[\s\S]*?nextState\.top\s*=",
+        )
+        self.assertRegex(
+            save_body,
+            r"let previousState\s*=\s*\{\s*\}\s*;\s*try\s*\{[\s\S]*?previousState\s*=\s*JSON\.parse\(localStorage\.getItem\(MUSIC_PLAYER_STATE_KEY\)[\s\S]*?\}\s*catch\s*\([^)]*\)\s*\{\s*previousState\s*=\s*\{\s*\}\s*;\s*\}",
+        )
+        self.assertRegex(
+            save_body,
+            r"try\s*\{\s*localStorage\.setItem\(MUSIC_PLAYER_STATE_KEY\s*,\s*JSON\.stringify\(\s*\{\s*\.\.\.previousState\s*,\s*\.\.\.nextState\s*\}\s*\)\s*\)\s*;\s*\}\s*catch",
+        )
+
+        resize_body = extract_event_listener(INDEX_HTML, "resize")
+        self.assertIsNotNone(resize_body)
+        self.assertRegex(
+            resize_body,
+            r"^\s*if\s*\(\s*isMobileMusicPlayerLayout\(\)\s*\)\s*return\s*;",
         )
 
     def test_mobile_timeline_overrides_lane_columns(self):

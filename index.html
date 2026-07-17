@@ -622,7 +622,63 @@
       .id-layout { grid-template-columns: 92px 1fr; }
       .quote-banner { margin-top: 80px; }
       .updates-head { align-items: flex-start; flex-direction: column; }
-      .music-player { top: 94px; right: 14px; width: min(316px, calc(100vw - 28px)); max-height: calc(100vh - 112px); overflow-y: auto; }
+      .music-player,
+      .music-player.music-mini {
+        top: 94px !important;
+        right: 14px !important;
+        left: auto !important;
+        width: min(230px, calc(100vw - 28px)) !important;
+        height: 60px !important;
+        min-height: 60px !important;
+        padding: 6px 7px !important;
+        overflow: hidden !important;
+        border-radius: 16px;
+      }
+      .music-player .music-heading,
+      .music-player .music-timeline,
+      .music-player .music-controls,
+      .music-player .music-lyrics,
+      .music-player .music-popover,
+      .music-player .music-volume-row,
+      .music-player .music-mini-restore { display: none !important; }
+      .music-player .music-track,
+      .music-player.music-mini .music-track {
+        width: 100%;
+        height: 46px;
+        padding-right: 48px;
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 9px;
+      }
+      .music-player .music-cover,
+      .music-player.music-mini .music-cover {
+        width: 44px;
+        height: 44px;
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+      .music-player .music-info,
+      .music-player.music-mini .music-info { display: block; }
+      .music-player .music-artist { display: none; }
+      .music-player .music-mini-play,
+      .music-player.music-mini .music-mini-play {
+        position: absolute;
+        inset: auto;
+        top: 7px;
+        right: 7px;
+        bottom: auto;
+        left: auto;
+        z-index: 2;
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        color: var(--white);
+        background: var(--pink);
+        box-shadow: 2px 2px 0 var(--ink);
+        cursor: pointer;
+      }
       .comments-head { align-items: flex-start; flex-direction: column; }
       .comment-form { grid-template-columns: 1fr; }
       .comment-submit { min-height: 38px; }
@@ -1644,19 +1700,32 @@
     const MUSIC_PLAYER_STATE_KEY = 'yezi-music-player-state-v3';
     let musicPlayerDrag = null;
 
+    function isMobileMusicPlayerLayout() {
+      return window.matchMedia('(max-width: 680px)').matches;
+    }
+
     function saveMusicPlayerState() {
-      const rect = musicPlayer.getBoundingClientRect();
+      let previousState = {};
       try {
-        localStorage.setItem(MUSIC_PLAYER_STATE_KEY, JSON.stringify({
-          left: Math.round(rect.left),
-          top: Math.round(rect.top),
-          mini: musicPlayer.classList.contains('music-mini'),
-          lyricsCollapsed: musicPlayer.classList.contains('lyrics-collapsed'),
-          trackId: musicPlaylist[currentMusicIndex]?.id || '',
-          volume: musicAudio.volume,
-          muted: musicAudio.muted,
-          loop: musicAudio.loop
-        }));
+        previousState = JSON.parse(localStorage.getItem(MUSIC_PLAYER_STATE_KEY) || '{}') || {};
+      } catch (error) {
+        previousState = {};
+      }
+      const nextState = {
+        mini: musicPlayer.classList.contains('music-mini'),
+        lyricsCollapsed: musicPlayer.classList.contains('lyrics-collapsed'),
+        trackId: musicPlaylist[currentMusicIndex]?.id || '',
+        volume: musicAudio.volume,
+        muted: musicAudio.muted,
+        loop: musicAudio.loop
+      };
+      if (!isMobileMusicPlayerLayout()) {
+        const rect = musicPlayer.getBoundingClientRect();
+        nextState.left = Math.round(rect.left);
+        nextState.top = Math.round(rect.top);
+      }
+      try {
+        localStorage.setItem(MUSIC_PLAYER_STATE_KEY, JSON.stringify({ ...previousState, ...nextState }));
       } catch (error) { /* Position memory is optional in private browsing. */ }
     }
 
@@ -1779,6 +1848,7 @@
     });
     musicMiniRestore.addEventListener('click', () => restoreMusicPlayer());
     window.addEventListener('resize', () => {
+      if (isMobileMusicPlayerLayout()) return;
       if (musicPlayer.classList.contains('music-mini')) { dockMusicPlayer(musicPlayer.getBoundingClientRect().top); return; }
       if (!musicPlayer.style.left) return;
       const rect = musicPlayer.getBoundingClientRect();
