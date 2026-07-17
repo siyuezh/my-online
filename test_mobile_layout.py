@@ -199,6 +199,19 @@ class MobileLayoutTests(unittest.TestCase):
             "none !important",
         )
 
+        open_menu_rule = find_rule(
+            self.mobile_css,
+            {"body:has(.nav-links.open) .music-player"},
+        )
+        self.assertIsNotNone(
+            open_menu_rule,
+            "mobile player should yield to the open navigation menu",
+        )
+        self.assertEqual(
+            parse_declarations(open_menu_rule).get("display"),
+            "none !important",
+        )
+
     def test_mobile_player_does_not_overwrite_desktop_position(self):
         layout_helper = extract_js_function(
             INDEX_HTML,
