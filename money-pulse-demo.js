@@ -61,8 +61,38 @@
   state.tasks = Array.isArray(state.tasks) ? state.tasks : initialState().tasks
   state.transactions = Array.isArray(state.transactions) ? state.transactions : []
 
-  const expenseCategories = ['餐饮', '购物', '交通', '日用', '娱乐', '居住', '学习', '其他']
+  const expenseCategories = ['餐饮', '购物', '交通', '日用', '娱乐', '居住', '学习', '医疗', '数码', '人情', '旅行', '其他']
   const incomeCategories = ['工资', '兼职', '奖金', '报销', '红包', '退款', '其他收入', '理财']
+  const categoryVisuals = {
+    '餐饮': ['utensils', 'amber'], '购物': ['cart', 'rose'], '交通': ['bus', 'indigo'], '日用': ['basket', 'blue'],
+    '娱乐': ['gamepad', 'violet'], '居住': ['house', 'slate'], '学习': ['book', 'cyan'], '医疗': ['heart', 'red'],
+    '数码': ['phone', 'blue'], '人情': ['gift', 'amber'], '旅行': ['plane', 'cyan'], '其他': ['more', 'slate'],
+    '工资': ['wallet', 'red'], '兼职': ['briefcase', 'blue'], '奖金': ['badge', 'amber'], '报销': ['receipt', 'cyan'],
+    '红包': ['gift', 'red'], '退款': ['rotate', 'cyan'], '其他收入': ['coin', 'slate'], '理财': ['chart', 'violet'],
+    '账户转账': ['transfer', 'blue']
+  }
+  const iconPaths = {
+    utensils: '<path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M16 3v18M16 3c3 2 4 5 4 8h-4"/>',
+    cart: '<circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 10.5a2 2 0 0 0 2 1.5h7.8a2 2 0 0 0 2-1.6L21 8H6"/>',
+    bus: '<rect x="5" y="3" width="14" height="16" rx="3"/><path d="M7 13h10M8 19v2m8-2v2M8 7h8"/><circle cx="8" cy="16" r="1"/><circle cx="16" cy="16" r="1"/>',
+    basket: '<path d="M4 9h16l-2 11H6L4 9Zm4 0 4-6 4 6M9 13v3m6-3v3"/>',
+    gamepad: '<path d="M8 8h8a5 5 0 0 1 4.7 6.7l-1 2.8a2 2 0 0 1-3.3.8L14 16h-4l-2.4 2.3a2 2 0 0 1-3.3-.8l-1-2.8A5 5 0 0 1 8 8Z"/><path d="M8 11v4m-2-2h4m6-1h.01m2 2h.01"/>',
+    house: '<path d="m3 11 9-8 9 8v9H5v-9M9 20v-6h6v6"/>',
+    book: '<path d="M4 5a3 3 0 0 1 3-3h5v18H7a3 3 0 0 0-3 3V5Zm16 0a3 3 0 0 0-3-3h-5v18h5a3 3 0 0 1 3 3V5Z"/>',
+    heart: '<path d="M3 12h4l2-5 4 10 2-5h6M19 5a5 5 0 0 0-7 0 5 5 0 0 0-7 0"/>',
+    phone: '<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 5h4m-3 14h2"/>',
+    gift: '<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18M7.5 8C5 8 4 6.8 4 5.5S5 3 6.5 3C9 3 12 8 12 8m4.5 0C19 8 20 6.8 20 5.5S19 3 17.5 3C15 3 12 8 12 8"/>',
+    plane: '<path d="m22 2-7 20-4-9-9-4 20-7ZM11 13l4-4"/>',
+    more: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
+    wallet: '<path d="M3 6h16a2 2 0 0 1 2 2v11H5a2 2 0 0 1-2-2V6Zm0 0 13-3v3M16 11h5v4h-5a2 2 0 0 1 0-4Z"/>',
+    briefcase: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18M10 12v2h4v-2"/>',
+    badge: '<circle cx="12" cy="12" r="9"/><path d="M15 8.5c-.7-.7-1.7-1-3-1-1.7 0-3 .8-3 2s1 2 3 2 3 .8 3 2-1.3 2-3 2c-1.3 0-2.3-.3-3-1M12 6v12"/>',
+    receipt: '<path d="M6 2h12v20l-3-2-3 2-3-2-3 2V2Zm3 6h6m-6 4h6m-6 4h4"/>',
+    rotate: '<path d="M3 12a9 9 0 1 0 3-6.7M3 3v6h6"/>',
+    coin: '<circle cx="12" cy="12" r="9"/><path d="M15 8.5c-.7-.7-1.7-1-3-1-1.7 0-3 .8-3 2s1 2 3 2 3 .8 3 2-1.3 2-3 2c-1.3 0-2.3-.3-3-1M12 6v12"/>',
+    chart: '<path d="M4 19V9m5 10V5m5 14v-7m5 7V3M2 19h20"/>',
+    transfer: '<path d="m7 7-3 3 3 3M4 10h13m0 1 3 3-3 3m3-3H7"/>'
+  }
   const colors = ['#5579dc', '#d875ac', '#d3a03f', '#36a987', '#8a70c8', '#ec755f']
   const chartLabels = {
     time: ['实时资金曲线', '按每笔记录刷新'],
@@ -308,7 +338,10 @@
   function renderCategories() {
     const categories = state.type === 'income' ? incomeCategories : state.type === 'transfer' ? ['账户转账'] : expenseCategories
     if (!categories.includes(state.category)) state.category = categories[0]
-    el('categoryGrid').innerHTML = categories.map((category) => `<button type="button" class="${category === state.category ? 'active' : ''}" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>`).join('')
+    el('categoryGrid').innerHTML = categories.map((category) => {
+      const [icon, tone] = categoryVisuals[category] || categoryVisuals['其他']
+      return `<button type="button" class="${category === state.category ? 'active' : ''}" data-category="${escapeHtml(category)}" aria-label="选择${escapeHtml(category)}分类"><span class="category-icon tone-${tone}"><svg viewBox="0 0 24 24" aria-hidden="true">${iconPaths[icon]}</svg></span><span>${escapeHtml(category)}</span></button>`
+    }).join('')
   }
 
   function renderAccountOptions() {
