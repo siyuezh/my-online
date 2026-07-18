@@ -1,0 +1,149 @@
+<!doctype html>
+<link rel="stylesheet" href="original-sections.css?v=4">
+<link rel="stylesheet" href="parity.css?v=4">
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="资金脉冲微信小程序产品设计与交互案例">
+  <title>资金脉冲 · YEZI 作品集</title>
+  <link rel="stylesheet" href="subpages.css">
+  <link rel="stylesheet" href="money-pulse.css">
+</head>
+<body class="money-case">
+  <div class="nav-wrap">
+    <nav class="nav" aria-label="主导航">
+      <a class="brand" href="index.html#home">YEZI<i>.</i></a>
+      <button class="menu" type="button" aria-label="展开导航">☰</button>
+      <div class="nav-links">
+        <a class="nav-link" href="index.html#home">首页</a>
+        <a class="nav-link" href="index.html#about">关于我</a>
+        <a class="nav-link" href="archive.html">归档</a>
+        <a class="nav-link active" href="works.html">作品集</a>
+        <a class="nav-link" href="projects.html">项目</a>
+      </div>
+      <a class="nav-mail" href="mailto:hello@example.com" aria-label="给我发邮件"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+    </nav>
+  </div>
+
+  <main>
+    <header class="case-hero">
+      <div class="case-shell hero-copy reveal">
+        <a class="back-link" href="works.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>返回作品集</a>
+        <div class="case-kicker">PRODUCT 001 / WECHAT MINI PROGRAM</div>
+        <h1>资金<span>脉冲</span></h1>
+        <p>把每天零散的收支，变成一条看得懂、愿意持续关注的个人资金曲线。</p>
+        <div class="case-tags"><span>产品设计</span><span>视觉系统</span><span>小程序开发</span><span>数据可视化</span></div>
+      </div>
+
+      <div class="demo-stage reveal">
+        <div class="stage-note note-a">REAL DATA<br><strong>一位小数</strong></div>
+        <div class="stage-note note-b">TRY IT<br><strong>可以操作</strong></div>
+        <div class="stage-arrow" aria-hidden="true"><svg viewBox="0 0 120 80" fill="none"><path d="M8 20c35-8 75 5 88 35" stroke="#111" stroke-width="4" stroke-linecap="round"/><path d="m85 52 14 5-5-15" stroke="#111" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <div class="demo-phone" id="moneyPulseDemo">
+          <div class="phone-speaker"></div>
+          <div class="phone-status"><span id="demoTime">20:26</span><span>● 5G ▰</span></div>
+          <div class="phone-screen">
+            <section class="demo-view active" data-view="home">
+              <div class="app-head"><div><strong>资金脉冲</strong><small>个人资金实时监控</small></div><button class="round-action" type="button" data-demo-action="profile" aria-label="账户">脉</button></div>
+              <div class="capital-head"><div><small>总资金</small><div class="capital-value" id="totalFunds">¥ 5,000.0</div></div><button class="import-button" type="button" data-demo-action="import">导入当前资金</button></div>
+              <div class="today-line"><strong id="todayDelta">今日 -¥36.5</strong><span>现金流变化</span></div>
+              <div class="chart-label"><span>实时资金曲线</span><strong id="chartDelta">-¥36.5</strong></div>
+              <svg class="capital-chart" viewBox="0 0 320 128" role="img" aria-label="资金变化曲线"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6886df" stop-opacity=".28"/><stop offset="1" stop-color="#6886df" stop-opacity="0"/></linearGradient></defs><path class="chart-grid" d="M0 30H320M0 64H320M0 98H320"/><path id="chartArea" fill="url(#chartFill)"/><path id="chartLine" fill="none" stroke="#5575d3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle id="chartDot" r="5" fill="#604e91" stroke="#fff" stroke-width="3"/></svg>
+              <div class="chart-tabs"><button class="active" type="button">时分</button><button type="button">日 K</button><button type="button">月 K</button></div>
+              <div class="hero-numbers"><div><span>今日花费</span><strong id="todayExpense">¥36.5</strong></div><div><span>本月结余</span><strong id="monthBalance">¥823.5</strong></div><div><span>月底预测</span><strong id="monthForecast">¥536.2</strong></div></div>
+              <button class="app-panel insight-panel" type="button" data-view-target="insights"><small>智能今日提示</small><strong id="insightTitle">当前现金流保持稳定</strong><span id="insightCopy">月底仍有结余空间，继续保持当前节奏。</span></button>
+              <div class="mini-metrics"><div class="app-panel"><span>月度预算</span><strong id="budgetRate">18%</strong><i><b id="budgetBar"></b></i></div><div class="app-panel"><span>储蓄目标</span><strong id="goalRate">12%</strong><i><b class="goal-bar"></b></i></div></div>
+            </section>
+
+            <section class="demo-view" data-view="ledger">
+              <div class="view-title"><div><strong>账本</strong><small>每一笔变化都有迹可循</small></div><button type="button" data-demo-action="reset" aria-label="恢复演示数据"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2-5.3M4 4v6h6"/></svg></button></div>
+              <div class="ledger-summary app-panel"><div class="month-switch"><span>‹</span><strong id="ledgerMonth">2026年7月</strong><span>›</span></div><div class="summary-grid"><div><small>收入</small><strong id="ledgerIncome">¥860.0</strong></div><div><small>支出</small><strong id="ledgerExpense">¥36.5</strong></div><div><small>结余</small><strong id="ledgerBalance">¥823.5</strong></div></div></div>
+              <div class="ledger-tabs"><button class="active" type="button">明细</button><button type="button">日历</button></div>
+              <div class="filter-pills"><button class="active" type="button">全部</button><button type="button">支出</button><button type="button">收入</button><button type="button">转账</button></div>
+              <div class="transaction-list" id="transactionList"></div>
+            </section>
+
+            <section class="demo-view" data-view="add">
+              <div class="view-title"><div><strong>记一笔</strong><small>三秒完成一条记录</small></div></div>
+              <div class="type-switch"><button class="active" type="button" data-type="expense">支出</button><button type="button" data-type="income">收入</button></div>
+              <label class="amount-entry"><span>金额</span><div><b>¥</b><input id="amountInput" type="number" min="0" step="0.1" inputmode="decimal" value="36.5" aria-label="金额"></div></label>
+              <div class="category-title">选择分类</div>
+              <div class="category-grid" id="categoryGrid"></div>
+              <label class="note-entry"><span>备注</span><input id="noteInput" type="text" maxlength="24" placeholder="写点什么，可选"></label>
+              <button class="demo-primary" type="button" id="saveTransaction">完成记账</button>
+              <p class="demo-feedback" id="demoFeedback" role="status"></p>
+            </section>
+
+            <section class="demo-view" data-view="insights">
+              <div class="view-title"><div><strong>财务洞察</strong><small>解释变化，也给出下一步</small></div><span class="score-badge">健康分 <b id="healthScore">78</b></span></div>
+              <div class="forecast-panel app-panel"><small>预计月底结余</small><strong id="forecastLarge">¥536.2</strong><p>综合本月均速、近 7 天支出和预算基线计算。</p></div>
+              <div class="insight-section"><div class="section-row"><strong>消费结构</strong><span>本月</span></div><div class="spend-bars" id="spendBars"></div></div>
+              <div class="report-panel app-panel"><small>智能本月报告</small><strong id="reportTitle">支出节奏处于可控范围</strong><p id="reportCopy">当前记录较稳定，建议优先完成储蓄目标。</p></div>
+            </section>
+
+            <section class="demo-view" data-view="growth">
+              <div class="view-title"><div><strong>成长</strong><small>让每一次储蓄都看得见</small></div><span class="level-badge">LV.3</span></div>
+              <div class="goal-card app-panel"><small>我的目标</small><strong>建立应急金</strong><div class="goal-amount"><b id="goalCurrent">¥1,200.0</b><span>/ ¥10,000.0</span></div><i><b id="goalProgress"></b></i><button type="button" id="depositGoal">存入 ¥100.0</button></div>
+              <div class="growth-stats"><div class="app-panel"><span>连续记账</span><strong>7 天</strong></div><div class="app-panel"><span>本月储蓄率</span><strong id="savingRate">95%</strong></div></div>
+              <div class="lesson-list"><strong>今天学一点</strong><button type="button"><span>01</span><div><b>先储蓄还是先还债？</b><small>用利率和应急程度判断优先级</small></div></button><button type="button"><span>02</span><div><b>预算为什么总坚持不下来？</b><small>给必要消费留出真实空间</small></div></button></div>
+            </section>
+          </div>
+
+          <nav class="demo-nav" aria-label="小程序演示导航">
+            <button class="active" type="button" data-view-target="home"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9H5v-9"/><path d="M9 20v-6h6v6"/></svg><span>总览</span></button>
+            <button type="button" data-view-target="ledger"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5zM9 3v18M12 8h4M12 12h4M12 16h4"/></svg><span>账本</span></button>
+            <button class="add-nav" type="button" data-view-target="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>记一笔</span></button>
+            <button type="button" data-view-target="insights"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg><span>洞察</span></button>
+            <button type="button" data-view-target="growth"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M21 12h-3M12 21v-3M3 12h3"/></svg><span>成长</span></button>
+          </nav>
+
+          <div class="fund-modal" id="fundModal" hidden>
+            <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="fundModalTitle">
+              <button class="modal-close" type="button" data-demo-action="close-modal" aria-label="关闭">×</button>
+              <small>IMPORT FUNDS</small><strong id="fundModalTitle">导入当前资金</strong><label>账户名称<input id="fundName" value="工资银行卡"></label><label>当前金额<input id="fundAmount" type="number" min="0" step="0.1" value="5000"></label><button class="demo-primary" type="button" id="confirmFunds">确认导入</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="case-strip">
+      <div class="case-shell fact-grid reveal"><div><span>项目角色</span><strong>产品 / UI / 开发</strong></div><div><span>产品平台</span><strong>微信小程序</strong></div><div><span>目标用户</span><strong>年轻记账用户</strong></div><div><span>当前版本</span><strong>1.2.x</strong></div></div>
+    </section>
+
+    <section class="case-section case-shell">
+      <div class="section-heading reveal"><span>01 / WHY</span><h2>记账不应该只是<br><mark>记录过去</mark></h2><p>传统账本擅长罗列数字，却很难让用户理解自己的资金正在往哪里走。资金脉冲把“账户总额”作为主视角，用曲线、预测和行动建议建立持续反馈。</p></div>
+      <div class="problem-grid reveal"><article><b>01</b><h3>记录成本高</h3><p>分类过多、流程过长，用户很难坚持。</p></article><article><b>02</b><h3>数据没有感觉</h3><p>账单数字很多，但缺少清晰的趋势反馈。</p></article><article><b>03</b><h3>目标容易失焦</h3><p>预算与储蓄目标分散，无法形成行动闭环。</p></article></div>
+    </section>
+
+    <section class="feature-band">
+      <div class="case-shell">
+        <div class="section-heading compact reveal"><span>02 / SYSTEM</span><h2>五个页面，一条资金主线</h2></div>
+        <div class="feature-grid">
+          <article class="feature-card reveal"><span>01</span><svg viewBox="0 0 24 24"><path d="M3 17 9 11l4 4 8-10"/><path d="M15 5h6v6"/></svg><h3>资金曲线</h3><p>时分、日 K、月 K 三种视角观察总资金变化。</p></article>
+          <article class="feature-card reveal"><span>02</span><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5zM9 3v18M12 8h4M12 12h4M12 16h4"/></svg><h3>统一账本</h3><p>明细、日历、分类占比和消费排行集中查看。</p></article>
+          <article class="feature-card reveal"><span>03</span><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><h3>快速记账</h3><p>金额、分类、账户和备注组成最短记录路径。</p></article>
+          <article class="feature-card reveal"><span>04</span><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg><h3>月底预测</h3><p>结合本月均速、近七天支出和预算基线预测。</p></article>
+          <article class="feature-card reveal"><span>05</span><svg viewBox="0 0 24 24"><path d="M4 7h16M6 3v4M18 3v4M5 11h14v10H5z"/></svg><h3>账单导入</h3><p>支持 CSV 与 XLSX，自动分类、去重并整理。</p></article>
+          <article class="feature-card reveal"><span>06</span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 13c2 2 6 2 8 0M9 9h.01M15 9h.01"/></svg><h3>储蓄成长</h3><p>把目标进度、连续记录和轻量知识放在一起。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="case-section case-shell architecture-section">
+      <div class="section-heading reveal"><span>03 / LOGIC</span><h2>从账单到洞察的<br><mark class="blue-mark">数据链路</mark></h2></div>
+      <div class="logic-flow reveal"><div><span>INPUT</span><strong>手动记账<br>CSV / XLSX</strong></div><i>→</i><div><span>PROCESS</span><strong>分类 · 去重<br>一位小数</strong></div><i>→</i><div><span>OUTPUT</span><strong>曲线 · 预测<br>行动建议</strong></div></div>
+      <div class="design-notes reveal"><article><span>视觉策略</span><h3>用行情感表达资金变化</h3><p>借用股票行情的曲线与 K 线语言，但去除交易压力，转化成个人现金流的趣味反馈。</p></article><article><span>交互策略</span><h3>重要数字先于功能入口</h3><p>总资金、今日花费、本月结余和月底预测构成首屏阅读顺序，功能围绕数字展开。</p></article></div>
+    </section>
+
+    <section class="case-ending">
+      <div class="case-shell reveal"><span>WHAT'S NEXT</span><h2>把复杂财务，变成每天都愿意看一眼的东西。</h2><div><a class="case-button primary" href="#moneyPulseDemo">再体验一次</a><a class="case-button" href="works.html">返回作品集</a></div></div>
+    </section>
+  </main>
+
+  <footer class="case-footer case-shell"><span>© 2026 YEZI. ALL RIGHTS RESERVED.</span><span>MONEY PULSE · DESIGNED & BUILT BY YEZI</span></footer>
+  <script src="money-pulse-demo.js"></script>
+</body>
+</html>
