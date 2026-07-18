@@ -24,6 +24,9 @@
     ledgerFilter: 'all',
     ledgerSearch: '',
     selectedDate: dateKey(today),
+    ledgerChart: 'trend',
+    ledgerChartDay: dateKey(today),
+    categoryFilter: '',
     monthOffset: 0,
     selectedLesson: '',
     editingId: null,
@@ -184,6 +187,7 @@
 
   function filteredTransactions(summary) {
     let items = state.ledgerFilter === 'all' ? summary.items : summary.items.filter((item) => item.type === state.ledgerFilter)
+    if (state.categoryFilter) items = items.filter((item) => item.category === state.categoryFilter)
     const query = String(state.ledgerSearch || '').trim().toLowerCase()
     if (query) items = items.filter((item) => `${item.category} ${item.note || ''} ${accountName(item.accountId)} ${accountName(item.toAccountId)}`.toLowerCase().includes(query))
     return items
@@ -225,6 +229,74 @@
     }).join('')
   }
 
+  function expenseGroups(summary) {
+    const groups = {}
+    summary.items.filter((item) => item.type === 'expense').forEach((item) => { groups[item.category] = roundMoney((groups[item.category] || 0) + item.amount) })
+    return Object.entries(groups).sort((a, b) => b[1] - a[1])
+  }
+
+  function renderTrendChart(summary) {
+    const monthDate = selectedMonthDate()
+    const days = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate()
+    const monthKey = currentMonth()
+    const daily = Array.from({ length: days }, (_, index) => ({ day: index + 1, date: `${monthKey}-${pad(index + 1)}`, income: 0, expense: 0 }))
+    summary.items.forEach((item) => {
+      const index = Number(item.date.slice(8)) - 1
+      if (daily[index] && (item.type === 'income' || item.type === 'expense')) daily[index][item.type] += item.amount
+    })
+    const max = Math.max(1, ...daily.flatMap((item) => [item.income, item.expense]))
+    const point = (item, type, index) => ({ x: 12 + index * 276 / Math.max(1, days - 1), y: 99 - item[type] / max * 75 })
+    const incomePoints = daily.map((item, index) => point(item, 'income', index))
+    const expensePoints = daily.map((item, index) => point(item, 'expense', index))
+    const path = (points) => `M${points.map((item) => `${item.x.toFixed(1)},${item.y.toFixed(1)}`).join(' L')}`
+    if (!String(state.ledgerChartDay || '').startsWith(monthKey)) state.ledgerChartDay = daily.find((item) => item.income || item.expense)?.date || `${monthKey}-01`
+    const selected = daily.find((item) => item.date === state.ledgerChartDay) || daily[0]
+    const markers = daily.map((item, index) => {
+      if (!item.income && !item.expense) return ''
+      const income = incomePoints[index]
+      const expense = expensePoints[index]
+      const label = state.privacyMode ? `${item.day}日收支数据已隐藏` : `${item.day}日，收入${formatMoney(item.income)}元，支出${formatMoney(item.expense)}元`
+      return `<g class="ledger-chart-point ${state.ledgerChartDay === item.date ? 'selected' : ''}" data-ledger-day="${item.date}" tabindex="0" role="button" aria-label="${label}"><circle class="income-dot" cx="${income.x}" cy="${income.y}" r="3"/><circle class="expense-dot" cx="${expense.x}" cy="${expense.y}" r="3"/><circle class="hit-dot" cx="${income.x}" cy="${Math.min(income.y, expense.y)}" r="12"/></g>`
+    }).join('')
+    const selectedIncome = state.privacyMode ? '••••' : `¥${formatMoney(selected.income)}`
+    const selectedExpense = state.privacyMode ? '••••' : `¥${formatMoney(selected.expense)}`
+    el('ledgerChart').innerHTML = `<div class="ledger-chart-legend"><span><i class="income-line"></i>收入</span><span><i class="expense-line"></i>支出</span></div><svg class="ledger-trend-svg" viewBox="0 0 300 116" role="img" aria-label="${monthDate.getMonth() + 1}月每日收支趋势"><path class="ledger-grid-line" d="M12 24H288M12 61H288M12 99H288"/><path class="ledger-income-line" d="${path(incomePoints)}"/><path class="ledger-expense-line" d="${path(expensePoints)}"/>${markers}<text x="12" y="113">1日</text><text x="143" y="113">${Math.ceil(days / 2)}日</text><text x="270" y="113">${days}日</text></svg><div class="ledger-chart-insight" id="ledgerChartInsight"><span>${selected.day}日</span><strong class="income">收 ${selectedIncome}</strong><strong class="expense">支 ${selectedExpense}</strong></div>`
+  }
+
+  function renderCategoryChart(summary) {
+    const sorted = expenseGroups(summary)
+    const total = sorted.reduce((sumValue, [, amount]) => sumValue + amount, 0)
+    if (!sorted.length) { el('ledgerChart').innerHTML = '<div class="transaction-empty">本月暂无支出构成</div>'; return }
+    const chartItems = sorted.length > 5
+      ? [...sorted.slice(0, 4).map(([name, amount]) => ({ name, amount, grouped: false })), { name: '其他分类', amount: sorted.slice(4).reduce((sumValue, [, amount]) => sumValue + amount, 0), grouped: true }]
+      : sorted.map(([name, amount]) => ({ name, amount, grouped: false }))
+    let cursor = 0
+    const segments = chartItems.map(({ name, amount, grouped }, index) => {
+      const start = cursor
+      cursor += amount / total * 100
+      return { name, amount, grouped, share: Math.round(amount / total * 100), color: colors[index % colors.length], start, end: cursor }
+    })
+    const gradient = segments.map((item) => `${item.color} ${item.start.toFixed(1)}% ${item.end.toFixed(1)}%`).join(',')
+    el('ledgerChart').innerHTML = `<div class="ledger-donut-layout"><div class="ledger-donut" style="background:conic-gradient(${gradient})" role="img" aria-label="本月支出构成，共${formatMoney(total)}元"><div><small>总支出</small><strong>${state.privacyMode ? '••••' : `¥${formatMoney(total)}`}</strong></div></div><div class="ledger-category-legend">${segments.map((item) => item.grouped ? `<span class="grouped"><i style="background:${item.color}"></i><span>${escapeHtml(item.name)}</span><b>${item.share}%</b></span>` : `<button type="button" class="${state.categoryFilter === item.name ? 'active' : ''}" data-ledger-category="${escapeHtml(item.name)}"><i style="background:${item.color}"></i><span>${escapeHtml(item.name)}</span><b>${item.share}%</b></button>`).join('')}</div></div>`
+  }
+
+  function renderLedgerRanking(summary) {
+    const sorted = expenseGroups(summary).slice(0, 5)
+    const max = sorted[0]?.[1] || 1
+    el('ledgerRanking').innerHTML = sorted.length ? sorted.map(([name, amount], index) => `<button type="button" class="ledger-rank-row ${state.categoryFilter === name ? 'active' : ''}" data-ledger-category="${escapeHtml(name)}"><span class="rank-index">${index + 1}</span><div><span><b>${escapeHtml(name)}</b><small>${Math.round(amount / Math.max(1, summary.expense) * 100)}%</small></span><i><b style="width:${Math.max(7, amount / max * 100)}%;background:${colors[index % colors.length]}"></b></i></div><strong>${state.privacyMode ? '••••' : `-¥${formatMoney(amount)}`}</strong></button>`).join('') : '<div class="transaction-empty compact">记录支出后生成排行</div>'
+  }
+
+  function renderLedgerVisuals(summary) {
+    const trend = state.ledgerChart !== 'category'
+    el('ledgerChartTitle').textContent = trend ? '收支趋势' : '支出构成'
+    el('ledgerChartSubtitle').textContent = trend ? '按天观察资金流动' : '查看钱主要花在哪里'
+    if (trend) renderTrendChart(summary); else renderCategoryChart(summary)
+    renderLedgerRanking(summary)
+    const chip = el('categoryFilterChip')
+    chip.hidden = !state.categoryFilter
+    chip.textContent = state.categoryFilter ? `${state.categoryFilter} ×` : ''
+  }
+
   function renderBars(summary) {
     const groups = {}
     summary.items.filter((item) => item.type === 'expense').forEach((item) => { groups[item.category] = (groups[item.category] || 0) + item.amount })
@@ -262,6 +334,7 @@
     document.querySelectorAll('[data-chart-range]').forEach((button) => button.classList.toggle('active', button.dataset.chartRange === state.chartRange))
     document.querySelectorAll('[data-ledger-view]').forEach((button) => button.classList.toggle('active', button.dataset.ledgerView === state.ledgerView))
     document.querySelectorAll('[data-ledger-filter]').forEach((button) => button.classList.toggle('active', button.dataset.ledgerFilter === state.ledgerFilter))
+    document.querySelectorAll('[data-ledger-chart]').forEach((button) => button.classList.toggle('active', button.dataset.ledgerChart === state.ledgerChart))
     document.querySelectorAll('[data-lesson]').forEach((button) => button.classList.toggle('active', button.dataset.lesson === state.selectedLesson))
     document.querySelectorAll('.type-switch button').forEach((button) => button.classList.toggle('active', button.dataset.type === state.type))
   }
@@ -311,6 +384,7 @@
     el('reportCopy').textContent = budgetRate < 80 ? '近期消费变化平稳，继续保持记录并优先完成储蓄目标。' : '建议检查高频消费，为必要支出预留空间。'
     el('lessonResult').textContent = state.selectedLesson ? lessons[state.selectedLesson] : '点开一课，会生成今日行动建议。'
     drawChart(summary)
+    renderLedgerVisuals(summary)
     renderTransactions(summary)
     renderBars(summary)
     renderCategories()
@@ -478,10 +552,19 @@
     }).filter(Boolean).slice(0, 200)
   }
 
+  function selectLedgerCategory(name) {
+    state.categoryFilter = state.categoryFilter === name ? '' : name
+    state.ledgerView = 'detail'
+    render()
+    showToast(state.categoryFilter ? `已筛选：${state.categoryFilter}` : '已清除分类筛选')
+  }
+
   document.querySelectorAll('[data-view-target]').forEach((button) => button.addEventListener('click', () => { switchView(button.dataset.viewTarget); showToast(`已切换到${button.textContent.trim()}`) }))
   document.querySelectorAll('[data-chart-range]').forEach((button) => button.addEventListener('click', () => { state.chartRange = button.dataset.chartRange; render(); pulse('.capital-chart'); showToast(`曲线切换为 ${button.textContent.trim()}`) }))
   document.querySelectorAll('[data-ledger-view]').forEach((button) => button.addEventListener('click', () => { state.ledgerView = button.dataset.ledgerView; render(); showToast(`账本切换为${button.textContent.trim()}`) }))
   document.querySelectorAll('[data-ledger-filter]').forEach((button) => button.addEventListener('click', () => { state.ledgerFilter = button.dataset.ledgerFilter; render(); showToast(`筛选：${button.textContent.trim()}`) }))
+  document.querySelectorAll('[data-ledger-chart]').forEach((button) => button.addEventListener('click', () => { state.ledgerChart = button.dataset.ledgerChart; render(); pulse('.ledger-visual'); showToast(`图表切换为${button.textContent.trim()}`) }))
+  el('categoryFilterChip').addEventListener('click', () => selectLedgerCategory(state.categoryFilter))
   el('ledgerSearch').value = state.ledgerSearch || ''
   el('ledgerSearch').addEventListener('input', (event) => { state.ledgerSearch = event.target.value; renderTransactions(totals()); saveState() })
   document.querySelectorAll('[data-month-shift]').forEach((button) => button.addEventListener('click', () => { state.monthOffset += Number(button.dataset.monthShift); render(); showToast(button.dataset.monthShift === '1' ? '查看下个月' : '查看上个月') }))
@@ -531,6 +614,19 @@
     const row = event.target.closest('[data-transaction-id]')
     if (row) openTransaction(row.dataset.transactionId)
   })
+  el('ledgerChart').addEventListener('click', (event) => {
+    const category = event.target.closest('[data-ledger-category]')
+    if (category) { selectLedgerCategory(category.dataset.ledgerCategory); return }
+    const day = event.target.closest('[data-ledger-day]')
+    if (day) { state.ledgerChartDay = day.dataset.ledgerDay; renderTrendChart(totals()); saveState() }
+  })
+  el('ledgerChart').addEventListener('keydown', (event) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return
+    const day = event.target.closest('[data-ledger-day]')
+    if (!day) return
+    event.preventDefault(); state.ledgerChartDay = day.dataset.ledgerDay; renderTrendChart(totals()); saveState()
+  })
+  el('ledgerRanking').addEventListener('click', (event) => { const category = event.target.closest('[data-ledger-category]'); if (category) selectLedgerCategory(category.dataset.ledgerCategory) })
   el('taskList').addEventListener('click', (event) => { const row = event.target.closest('[data-task-id]'); if (!row) return; const task = state.tasks.find((item) => item.id === row.dataset.taskId); if (task) task.done = !task.done; render(); showToast('行动进度已更新') })
   el('toolGrid').innerHTML = tools.map((tool) => `<button type="button" data-tool="${tool.type}"><b>${tool.icon}</b>${tool.name}</button>`).join('')
   el('toolGrid').addEventListener('click', (event) => { const button = event.target.closest('[data-tool]'); if (button) openCalculator(button.dataset.tool) })
