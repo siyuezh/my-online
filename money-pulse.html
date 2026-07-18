@@ -51,7 +51,7 @@
               <div class="today-line"><strong id="todayDelta">今日 -¥36.5</strong><span>现金流变化</span></div>
               <div class="chart-label"><span>实时资金曲线</span><strong id="chartDelta">-¥36.5</strong></div>
               <svg class="capital-chart" viewBox="0 0 320 128" role="img" aria-label="资金变化曲线"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6886df" stop-opacity=".28"/><stop offset="1" stop-color="#6886df" stop-opacity="0"/></linearGradient></defs><path class="chart-grid" d="M0 30H320M0 64H320M0 98H320"/><path id="chartArea" fill="url(#chartFill)"/><path id="chartLine" fill="none" stroke="#5575d3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle id="chartDot" r="5" fill="#604e91" stroke="#fff" stroke-width="3"/></svg>
-              <div class="chart-tabs"><button class="active" type="button">时分</button><button type="button">日 K</button><button type="button">月 K</button></div>
+              <div class="chart-tabs"><button class="active" type="button" data-chart-range="time">时分</button><button type="button" data-chart-range="day">日 K</button><button type="button" data-chart-range="month">月 K</button></div>
               <div class="hero-numbers"><div><span>今日花费</span><strong id="todayExpense">¥36.5</strong></div><div><span>本月结余</span><strong id="monthBalance">¥823.5</strong></div><div><span>月底预测</span><strong id="monthForecast">¥536.2</strong></div></div>
               <button class="app-panel insight-panel" type="button" data-view-target="insights"><small>智能今日提示</small><strong id="insightTitle">当前现金流保持稳定</strong><span id="insightCopy">月底仍有结余空间，继续保持当前节奏。</span></button>
               <div class="mini-metrics"><div class="app-panel"><span>月度预算</span><strong id="budgetRate">18%</strong><i><b id="budgetBar"></b></i></div><div class="app-panel"><span>储蓄目标</span><strong id="goalRate">12%</strong><i><b class="goal-bar"></b></i></div></div>
@@ -59,9 +59,9 @@
 
             <section class="demo-view" data-view="ledger">
               <div class="view-title"><div><strong>账本</strong><small>每一笔变化都有迹可循</small></div><button type="button" data-demo-action="reset" aria-label="恢复演示数据"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2-5.3M4 4v6h6"/></svg></button></div>
-              <div class="ledger-summary app-panel"><div class="month-switch"><span>‹</span><strong id="ledgerMonth">2026年7月</strong><span>›</span></div><div class="summary-grid"><div><small>收入</small><strong id="ledgerIncome">¥860.0</strong></div><div><small>支出</small><strong id="ledgerExpense">¥36.5</strong></div><div><small>结余</small><strong id="ledgerBalance">¥823.5</strong></div></div></div>
-              <div class="ledger-tabs"><button class="active" type="button">明细</button><button type="button">日历</button></div>
-              <div class="filter-pills"><button class="active" type="button">全部</button><button type="button">支出</button><button type="button">收入</button><button type="button">转账</button></div>
+              <div class="ledger-summary app-panel"><div class="month-switch"><button type="button" data-month-shift="-1" aria-label="查看上个月">‹</button><strong id="ledgerMonth">2026年7月</strong><button type="button" data-month-shift="1" aria-label="查看下个月">›</button></div><div class="summary-grid"><div><small>收入</small><strong id="ledgerIncome">¥860.0</strong></div><div><small>支出</small><strong id="ledgerExpense">¥36.5</strong></div><div><small>结余</small><strong id="ledgerBalance">¥823.5</strong></div></div></div>
+              <div class="ledger-tabs"><button class="active" type="button" data-ledger-view="detail">明细</button><button type="button" data-ledger-view="calendar">日历</button></div>
+              <div class="filter-pills"><button class="active" type="button" data-ledger-filter="all">全部</button><button type="button" data-ledger-filter="expense">支出</button><button type="button" data-ledger-filter="income">收入</button><button type="button" data-ledger-filter="transfer">转账</button></div>
               <div class="transaction-list" id="transactionList"></div>
             </section>
 
@@ -87,7 +87,7 @@
               <div class="view-title"><div><strong>成长</strong><small>让每一次储蓄都看得见</small></div><span class="level-badge">LV.3</span></div>
               <div class="goal-card app-panel"><small>我的目标</small><strong>建立应急金</strong><div class="goal-amount"><b id="goalCurrent">¥1,200.0</b><span>/ ¥10,000.0</span></div><i><b id="goalProgress"></b></i><button type="button" id="depositGoal">存入 ¥100.0</button></div>
               <div class="growth-stats"><div class="app-panel"><span>连续记账</span><strong>7 天</strong></div><div class="app-panel"><span>本月储蓄率</span><strong id="savingRate">95%</strong></div></div>
-              <div class="lesson-list"><strong>今天学一点</strong><button type="button"><span>01</span><div><b>先储蓄还是先还债？</b><small>用利率和应急程度判断优先级</small></div></button><button type="button"><span>02</span><div><b>预算为什么总坚持不下来？</b><small>给必要消费留出真实空间</small></div></button></div>
+              <div class="lesson-list"><strong>今天学一点</strong><button type="button" data-lesson="saving"><span>01</span><div><b>先储蓄还是先还债？</b><small>用利率和应急程度判断优先级</small></div></button><button type="button" data-lesson="budget"><span>02</span><div><b>预算为什么总坚持不下来？</b><small>给必要消费留出真实空间</small></div></button><p class="lesson-result" id="lessonResult">点开一课，会生成今日行动建议。</p></div>
             </section>
           </div>
 
@@ -105,6 +105,7 @@
               <small>IMPORT FUNDS</small><strong id="fundModalTitle">导入当前资金</strong><label>账户名称<input id="fundName" value="工资银行卡"></label><label>当前金额<input id="fundAmount" type="number" min="0" step="0.1" value="5000"></label><button class="demo-primary" type="button" id="confirmFunds">确认导入</button>
             </div>
           </div>
+          <p class="demo-toast" id="demoToast" role="status" aria-live="polite"></p>
         </div>
       </div>
     </header>
